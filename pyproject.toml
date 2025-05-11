@@ -10,6 +10,8 @@ dependencies = [
     "pyarrow>=20.0.0",
     "python-dotenv>=1.1.0",
     "requests>=2.32.3",
+    "scikit-learn>=1.6.1",
     "sentence-transformers>=4.1.0",
+    "tqdm>=4.67.1",
     "youtube-transcript-api>=1.0.3",
 ]

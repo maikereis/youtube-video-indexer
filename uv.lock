@@ -1326,7 +1326,9 @@ dependencies = [
     { name = "pyarrow" },
     { name = "python-dotenv" },
     { name = "requests" },
+    { name = "scikit-learn" },
     { name = "sentence-transformers" },
+    { name = "tqdm" },
     { name = "youtube-transcript-api" },
 ]
 
@@ -1337,6 +1339,8 @@ requires-dist = [
     { name = "pyarrow", specifier = ">=20.0.0" },
     { name = "python-dotenv", specifier = ">=1.1.0" },
     { name = "requests", specifier = ">=2.32.3" },
+    { name = "scikit-learn", specifier = ">=1.6.1" },
     { name = "sentence-transformers", specifier = ">=4.1.0" },
+    { name = "tqdm", specifier = ">=4.67.1" },
     { name = "youtube-transcript-api", specifier = ">=1.0.3" },
 ]
