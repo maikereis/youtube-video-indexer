@@ -5,13 +5,17 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "fastapi>=0.115.12",
     "ipykernel>=6.29.5",
+    "ngrok>=1.4.0",
     "pandas>=2.2.3",
     "pyarrow>=20.0.0",
     "python-dotenv>=1.1.0",
     "requests>=2.32.3",
     "scikit-learn>=1.6.1",
     "sentence-transformers>=4.1.0",
+    "slowapi>=0.1.9",
     "tqdm>=4.67.1",
+    "uvicorn>=0.34.2",
     "youtube-transcript-api>=1.0.3",
 ]
