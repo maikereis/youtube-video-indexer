@@ -17,5 +17,6 @@ dependencies = [
     "slowapi>=0.1.9",
     "tqdm>=4.67.1",
     "uvicorn>=0.34.2",
+    "valkey>=6.1.0",
     "youtube-transcript-api>=1.0.3",
 ]
