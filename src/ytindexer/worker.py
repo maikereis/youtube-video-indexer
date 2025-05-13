@@ -127,5 +127,3 @@ class YouTubeNotificationProcessor:
         except Exception as e:
             logger.error(f"Worker encountered an error: {str(e)}")
             logger.error(traceback.format_exc())
-        finally:
-            await self.http_client.aclose()
