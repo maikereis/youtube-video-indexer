@@ -7,10 +7,11 @@ from slowapi.util import get_remote_address
 from slowapi.middleware import SlowAPIMiddleware
 from slowapi.errors import RateLimitExceeded
 
-from ytindexer.logging import logger
+from ytindexer.logging import logger, configure_logging
 from ytindexer.queue import NotificationQueue
 from ytindexer.config import settings
 
+configure_logging(log_level="INFO", log_file="logs/api.log")
 
 queue_name = "yt_queue"
 message_queue = NotificationQueue(queue_name)
@@ -20,13 +21,15 @@ app = FastAPI(
     title="YouTube Indexer API",
     description="API for YouTube video transcript indexation and search",
     version="1.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc",
 )
 
 allowed_hosts = [
     "localhost",
     "127.0.0.1",
     "pubsubhubbub.appspot.com",
-    settings.ngrok.url,
+    "*.ngrok-free.app",
 ]
 
 app.add_middleware(TrustedHostMiddleware, allowed_hosts=allowed_hosts)

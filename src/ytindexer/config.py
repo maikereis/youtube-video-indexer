@@ -15,12 +15,13 @@ class GoogleAPISettings(BaseSettings):
     url: str = Field("https://www.googleapis.com/youtube/v3/search", json_schema_extra={"env": "URL"})
 
 class NGrokSettings(BaseSettings):
-    url: str = Field(None, json_schema_extra={"env": "URL"})
+    url: str = Field("url", json_schema_extra={"env": "URL"})
 
 class Settings:
     def __init__(self):
         self.queue = QueueSettings()
         self.googleapi = GoogleAPISettings()
+        self.ngrok = NGrokSettings()
 
     @classmethod
     def load_settings(cls) -> "Settings":
