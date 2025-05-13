@@ -1,15 +1,31 @@
-# YouTube PubSubHubbub Indexer Architecture
+Youtube Index
 
-This document outlines the architecture for the YouTube PubSubHubbub indexer system, which processes YouTube content notifications, indexes them, and makes them searchable through an API.
+Youtube Video --> Transcript --> Embeddings
 
-## System Overview
+The embeddings are then used in a semantic search pipeline to recommend the best videos given a user query 
 
-The system follows an event-driven microservices architecture, designed to efficiently receive, process, and index YouTube content notifications. The architecture emphasizes scalability, fault tolerance, and separation of concerns.
+To register a push notification listener
 
-## Diagram
+1. Install ngrok 
 
-<img src="assets/architecture_diagram.png" alt="First stage diagram" width="500">
+    You can follow this [https://ngrok.com/]() 
 
-## Documentation
+2. Configure the ngrok installation
 
-[REF](assets/ARCHITECTURE.md)
+    ngrok config add-authtoken <your-auth-token-here>
+
+3. Expose your local port to the web 
+
+    ngrok http http://localhost:8080 #make sure to use the same port you use in api
+
+
+4. run the api
+
+    uvicorn src.app:app --host 0.0.0.0 --port 8080 --reload
+
+For batch processing, run the  
+
+
+Every time a channel you subscribe to uploads or updates a new video, you will be notified. More info here [Subscribe to Push Notifications](https://developers.google.com/youtube/v3/guides/push_notifications) 
+
+The notification can further handled to extract video info like link, title, and the transcripts, that will be embedded
