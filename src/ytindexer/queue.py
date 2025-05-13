@@ -1,5 +1,12 @@
+import json
 from abc import ABC, abstractmethod
 from typing import Any
+
+import valkey
+
+from ytindexer.config import settings
+from ytindexer.logging import logger
+
 
 class Queue(ABC):
     """Abstract base class for queue implementations"""

@@ -1,14 +1,39 @@
 services:
-  valkey:
-    env_file: .env
+  queue:
     image: valkey/valkey:8.1.1-alpine
-    environment:
-      QUEUE_DB_PORT: ${QUEUE_DB_PORT}
+    env_file: .env
     ports:
-      - "${QUEUE_DB_PORT}:6379"
+      - "${QUEUE_PORT}:6379"
     volumes:
-      - valkey_data:/data
-    restart: always
+      - queue-data:/data
+    restart: unless-stopped
+
+  db:
+    image: mongo:6
+    env_file: .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    ports:
+      - "${MONGO_PORT}:27017"
+    volumes:
+      - mongo-data:/data/db
+    restart: unless-stopped
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.4
+    env_file: .env
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "${ELASTIC_PORT}:9200"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    restart: unless-stopped
 
 volumes:
-  valkey_data:
+  queue-data:
+  mongo-data:
+  elasticsearch-data:
