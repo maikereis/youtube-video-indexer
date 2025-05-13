@@ -1,6 +1,7 @@
 import json
-import pytest
 from unittest.mock import MagicMock, patch
+
+import pytest
 
 from ytindexer.queue import NotificationQueue
 

@@ -1,7 +1,9 @@
 import os
+
 import pytest
 from pydantic import SecretStr
-from ytindexer.config import QueueSettings, GoogleAPISettings, Settings
+
+from ytindexer.config import GoogleAPISettings, QueueSettings, Settings
 
 
 def test_queue_settings_defaults(monkeypatch):
