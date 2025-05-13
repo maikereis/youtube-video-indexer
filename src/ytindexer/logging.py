@@ -1,7 +1,9 @@
 import sys
-from loguru import logger
 from enum import StrEnum
 from pathlib import Path
+
+from loguru import logger
+
 
 class LogLevels(StrEnum):
     info = "INFO"

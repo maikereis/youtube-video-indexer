@@ -1,6 +1,8 @@
-from typing  import Optional
+from typing import Optional
+
 from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
 
 class QueueSettings(BaseSettings):
     model_config = SettingsConfigDict(env=".env", env_prefix="QUEUE_")

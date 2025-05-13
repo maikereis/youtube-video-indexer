@@ -1,15 +1,14 @@
 from fastapi import FastAPI, Request, Response
-from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.middleware.cors import CORSMiddleware
-
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from slowapi import Limiter, _rate_limit_exceeded_handler
-from slowapi.util import get_remote_address
-from slowapi.middleware import SlowAPIMiddleware
 from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
+from slowapi.util import get_remote_address
 
-from ytindexer.logging import logger, configure_logging
-from ytindexer.queue import NotificationQueue
 from ytindexer.config import settings
+from ytindexer.logging import configure_logging, logger
+from ytindexer.queue import NotificationQueue
 
 configure_logging(log_level="INFO", log_file="logs/api.log")
 
