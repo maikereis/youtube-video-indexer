@@ -14,6 +14,9 @@ class GoogleAPISettings(BaseSettings):
     key: str = Field("your-key", json_schema_extra={"env": "KEY"})
     url: str = Field("https://www.googleapis.com/youtube/v3/search", json_schema_extra={"env": "URL"})
 
+class NGrokSettings(BaseSettings):
+    url: str = Field(None, json_schema_extra={"env": "URL"})
+
 class Settings:
     def __init__(self):
         self.queue = QueueSettings()
