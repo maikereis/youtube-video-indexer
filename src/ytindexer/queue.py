@@ -21,6 +21,11 @@ class Queue(ABC):
         """Remove and return an item from the queue"""
         pass
 
+    @abstractmethod
+    def queue_size(self) -> int:
+        """Return the current size of the queue"""
+        pass
+
 class NotificationQueue(Queue):
     """Queue implementation using Valkey/Redis"""
     
@@ -55,3 +60,7 @@ class NotificationQueue(Queue):
         except json.JSONDecodeError:
             # Return as is if it's not JSON
             return data
+
+    def queue_size(self) -> int:
+        """Return the current size of the queue"""
+        return self.client.llen(self.queue_name)
