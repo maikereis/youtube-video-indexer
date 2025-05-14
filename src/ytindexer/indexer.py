@@ -10,6 +10,10 @@ from ytindexer.config import settings
 
 import motor.motor_asyncio
 from elasticsearch import AsyncElasticsearch
+from pymongo.errors import OperationFailure
+
+VIDEOS_COLLECTION_INDEXES = ("video_id", "channel_id", "published",)
+CHANNELS_COLLECTION_INDEXES = ("channel_id",)
 
 class VideoIndexer:
     """
@@ -21,7 +25,7 @@ class VideoIndexer:
         self.mongo_client = motor.motor_asyncio.AsyncIOMotorClient(settings.mongo.dsn)
         self.db = self.mongo_client[settings.mongo.name]
 
-        self.video_collection = self.db["videos"]
+        self.videos_collection = self.db["videos"]
         self.channels_collection = self.db["channels"]
 
         self.es_client = AsyncElasticsearch(settings.search.dsn)
@@ -32,11 +36,19 @@ class VideoIndexer:
     async def ensure_indices(self):
         """Ensure the required database indices and mappings exist"""
         # Create MongoDB indices
-        await self.videos_collection.create_index("video_id", unique=True)
-        await self.videos_collection.create_index("channel_id")
-        await self.videos_collection.create_index("published")
-        
-        await self.channels_collection.create_index("channel_id", unique=True)
+
+        for index in VIDEOS_COLLECTION_INDEXES:
+            try:
+                await self.videos_collection.create_index(index, unique=True)
+            except OperationFailure as opf:
+                logger.warning(f"Index '{index}' already created")
+
+        for index in CHANNELS_COLLECTION_INDEXES:
+            try:
+                await self.channels_collection.create_index(index, unique=True)
+            except OperationFailure as opf:
+                logger.warning(f"Index '{index}' already created")
+
         
         # Create Elasticsearch index if it doesn't exist
         if not await self.es_client.indices.exists(index=self.index_name):
@@ -93,7 +105,7 @@ class VideoIndexer:
             # Store in MongoDB (upsert to handle updates)
             await self.videos_collection.update_one(
                 {"video_id": video_id},
-                {"$set": enriched_data},
+                {"$set": video_data},
                 upsert=True
             )
             
@@ -101,7 +113,7 @@ class VideoIndexer:
             await self.es_client.index(
                 index=self.index_name,
                 id=video_id,
-                body=enriched_data,
+                body=video_data,
                 refresh=True
             )
             
