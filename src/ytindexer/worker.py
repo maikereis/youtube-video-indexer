@@ -46,22 +46,22 @@ class YouTubeNotificationProcessor:
 
             channel_id = entry.find("yt:channelId", namespaces).text
 
-            title = entry.find("atom:title", namespaces).text
+            title = entry.find("xmlns:title", namespaces).text
 
-            published_at = entry.find("atom:published", namespaces).text
+            published_at = entry.find("xmlns:published", namespaces).text
 
-            updated_at = entry.find("atom:updated", namespaces).text
+            updated_at = entry.find("xmlns:updated", namespaces).text
 
             link = entry.find('xmlns:link', namespaces).get('href')
 
-            author = entry.find('./xmlns:author/xmlns:name', namespaces)
+            author = entry.find('./xmlns:author/xmlns:name', namespaces).text
 
             metadata = {
                 "video_id": video_id,
                 "channel_id": channel_id,
                 "title": title,
-                "published": published,
-                "updated": updated,
+                "published": published_at,
+                "updated": updated_at,
                 "link": link,
                 "author": author,
                 "processed_at": datetime.utcnow().isoformat(),
