@@ -12,7 +12,7 @@ from ytindexer.queue import NotificationQueue
 
 configure_logging(log_level="INFO", log_file="logs/api.log")
 
-queue_name = "yt_queue"
+queue_name = "notification_queue"
 message_queue = NotificationQueue(queue_name)
 
 
