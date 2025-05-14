@@ -4,13 +4,13 @@ import traceback
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
-from ytindexer.logging import logger
-from ytindexer.queue import Queue
-from ytindexer.config import settings
-
 import motor.motor_asyncio
 from elasticsearch import AsyncElasticsearch
 from pymongo.errors import OperationFailure
+
+from ytindexer.config import settings
+from ytindexer.logging import logger
+from ytindexer.queue import Queue
 
 VIDEOS_COLLECTION_INDEXES = ("video_id", "channel_id", "published",)
 CHANNELS_COLLECTION_INDEXES = ("channel_id",)
