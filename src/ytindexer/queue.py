@@ -1,6 +1,6 @@
 import json
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Any, List
 
 import valkey
 
@@ -19,6 +19,11 @@ class Queue(ABC):
     @abstractmethod
     def dequeue(self) -> Any:
         """Remove and return an item from the queue"""
+        pass
+
+    @abstractmethod
+    def batch_dequeue(self, batch_size: int) -> List[Any]:
+        """Remove and return multiple items from the queue"""
         pass
 
     @abstractmethod
@@ -60,6 +65,29 @@ class NotificationQueue(Queue):
         except json.JSONDecodeError:
             # Return as is if it's not JSON
             return data
+
+    def batch_dequeue(self, batch_size: int = 10) -> List[Any]:
+        """Remove and return multiple tasks from the queue"""
+        pipeline = self.client.pipeline()
+        
+        # Use multi/exec to make this atomic
+        pipeline.multi()
+        for _ in range(batch_size):
+            pipeline.rpop(self.queue_name)
+        results = pipeline.execute()
+        
+        # Filter out None values and parse JSON if applicable
+        processed_results = []
+        for result in results:
+            if result is None:
+                continue
+                
+            try:
+                processed_results.append(json.loads(result))
+            except json.JSONDecodeError:
+                processed_results.append(result)
+                
+        return processed_results
 
     def queue_size(self) -> int:
         """Return the current size of the queue"""
