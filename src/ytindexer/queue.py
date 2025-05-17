@@ -36,10 +36,10 @@ class NotificationQueue(Queue):
     
     def __init__(self, queue_name: str = "queue"):
         self.client = valkey.Valkey(
-            host=settings.queue.host, 
-            port=settings.queue.port, 
-            username=settings.queue.username,
-            password=settings.queue.password,
+            host=settings.valkey.host, 
+            port=settings.valkey.port, 
+            username=None,
+            password=settings.valkey.password.get_secret_value(),
             db=0
         )
         self.queue_name = queue_name

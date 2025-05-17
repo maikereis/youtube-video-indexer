@@ -4,11 +4,10 @@ from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class QueueSettings(BaseSettings):
-    model_config = SettingsConfigDict(env=".env", env_prefix="QUEUE_")
+class ValkeySettings(BaseSettings):
+    model_config = SettingsConfigDict(env=".env", env_prefix="VALKEY_")
     host: str = Field("localhost", json_schema_extra={"env": "HOST"})
     port: int = Field(6379, json_schema_extra={"env": "PORT"})
-    username: Optional[str] = Field(None, json_schema_extra={"env": "USERNAME"})
     password: Optional[SecretStr] = Field(None, json_schema_extra={"env": "PASSWORD"})
 
 class GoogleAPISettings(BaseSettings):
@@ -47,7 +46,7 @@ class ElasticSettings(BaseSettings):
 
 class Settings:
     def __init__(self):
-        self.queue = QueueSettings()
+        self.valkey = ValkeySettings()
         self.googleapi = GoogleAPISettings()
         self.ngrok = NGrokSettings()
         self.mongo = MongoSettings()
