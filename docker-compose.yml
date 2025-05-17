@@ -20,12 +20,13 @@ services:
       options:
         max-size: 1g
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     ports:
       - ${MONGO_PORT}:27017
     volumes:
       - mongo-data:/data/db
+      - ./init-mongo.sh:/docker-entrypoint-initdb.d/init-mongo.sh:ro
     networks:
       - local
     restart: always
@@ -39,6 +40,7 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ports:
       - ${ELASTIC_PORT}:9200
+      - 9300:9300
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
     healthcheck:
@@ -54,8 +56,13 @@ services:
     build: 
       context: .
       dockerfile: docker/app.Dockerfile
+    env_file: .env
     ports:
-      - "8000:8000"
+      - "8080:8000"
+    environment:
+      - VALKEY_HOST=valkey
+      - VALKEY_PORT=${VALKEY_PORT}
+      - VALKEY_PASSWORD=${VALKEY_PASSWORD}
     networks:
       - local
 
@@ -63,6 +70,7 @@ services:
     build: 
       context: .
       dockerfile: docker/indexer.Dockerfile
+    env_file: .env  
     environment:
       - ELASTIC_INDEX_NAME=videos
       - ELASTIC_HOST=elastic
@@ -92,6 +100,7 @@ services:
     build: 
       context: .
       dockerfile: docker/worker.Dockerfile
+    env_file: .env
     environment:
       - VALKEY_HOST=valkey
       - VALKEY_PORT=${VALKEY_PORT}

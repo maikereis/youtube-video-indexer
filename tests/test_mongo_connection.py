@@ -8,9 +8,14 @@ load_dotenv()  # Load variables from .env
 
 @pytest.mark.asyncio
 async def test_mongodb_connection():
-    host = os.getenv("MONGO_HOST", "localhost")
-    port = os.getenv("MONGO_PORT", "27017")
-    uri = f"mongodb://{host}:{port}"
+
+    #host = os.getenv("MONGO_HOST")
+    port = os.getenv("MONGO_PORT")
+    user = os.getenv("MONGO_USERNAME")
+    password = os.getenv("MONGO_PASSWORD")
+    auth = os.getenv("MONGO_AUTH")
+
+    uri = f"mongodb://{user}:{password}@localhost:{port}/default_db?authSource={auth}"
     
     client = AsyncIOMotorClient(uri, serverSelectionTimeoutMS=5000)
 

@@ -26,10 +26,11 @@ class MongoSettings(BaseSettings):
     port: int = Field(27017, json_schema_extra={"env": "PORT"})
     username: Optional[str] = Field(None, json_schema_extra={"env": "USERNAME"})
     password: Optional[SecretStr] = Field(None, json_schema_extra={"env": "PASSWORD"})
+    auth: Optional[str] = Field(None, json_schema_extra={"env": "AUTH"})
 
     @property
     def dsn(self) -> str:
-        return f"mongodb://{self.username}:{self.password.get_secret_value()}@{self.host}:{self.port}"
+        return f"mongodb://{self.username}:{self.password.get_secret_value()}@{self.host}:{self.port}/default_db?authSource={self.auth}"
 
 class ElasticSettings(BaseSettings):
     model_config = SettingsConfigDict(env=".env", env_prefix="ELASTIC_")

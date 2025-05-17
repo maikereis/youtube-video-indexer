@@ -8,9 +8,9 @@ load_dotenv()  # Load variables from .env
 
 @pytest.mark.asyncio
 async def test_elasticsearch_connection():
-    host = os.getenv("ELASTIC_HOST", "localhost")
+    #host = os.getenv("ELASTIC_HOST", "localhost")
     port = os.getenv("ELASTIC_PORT", "9200")
-    url = f"http://{host}:{port}"
+    url = f"http://localhost:{port}"
 
     es = AsyncElasticsearch(hosts=[url])
 
