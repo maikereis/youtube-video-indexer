@@ -1,19 +1,24 @@
 services:
-  queue:
+  valkey:
     image: valkey/valkey:8.1.1-alpine
     env_file: .env
     ports:
-      - "${QUEUE_PORT}:6379"
+      - ${VALKEY_PORT}:6379
+    environment:
+      - VALKEY_PASSWORD=${VALKEY_PASSWORD}
+    command: sh -c "valkey-server --requirepass \"$VALKEY_PASSWORD\""
+    networks:
+      - local
     volumes:
       - queue-data:/data
     restart: unless-stopped
 
   mongo:
     image: mongo:8.0
+    env_file: .env
     logging:
       options:
         max-size: 1g
-    env_file: .env
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
@@ -25,7 +30,7 @@ services:
       - local
     restart: always
 
-  elasticsearch:
+  elastic:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.16.0
     env_file: .env
     environment:
@@ -33,18 +38,69 @@ services:
       - xpack.security.enabled=false
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ports:
-      - 9200:9200
-      - 9300:9300
+      - ${ELASTIC_PORT}:9200
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
     healthcheck:
-        test: curl -s http://localhost:9200/_cluster/health | grep -q '"status"' || exit 1
+        test: curl -s http://localhost:$ELASTIC_PORT/_cluster/health | grep -q '"status"' || exit 1
         interval: 30s
         timeout: 10s
         retries: 5
     networks:
       - local
     restart: unless-stopped
+
+  api:
+    build: 
+      context: .
+      dockerfile: docker/app.Dockerfile
+    ports:
+      - "8000:8000"
+    networks:
+      - local
+
+  indexer:
+    build: 
+      context: .
+      dockerfile: docker/indexer.Dockerfile
+    environment:
+      - ELASTIC_INDEX_NAME=videos
+      - ELASTIC_HOST=elastic
+      - ELASTIC_PORT=${ELASTIC_PORT}
+      - ELASTIC_USERNAME=${ELASTIC_USERNAME}
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - ELASTIC_SCHEME=http
+      - MONGO_NAME=mongo
+      - MONGO_HOST=mongo
+      - MONGO_PORT=${MONGO_PORT}
+      - MONGO_USERNAME=${MONGO_USERNAME}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
+      - VALKEY_HOST=valkey
+      - VALKEY_PORT=${VALKEY_PORT}
+      - VALKEY_PASSWORD=${VALKEY_PASSWORD}
+    depends_on:
+      mongo:
+        condition: service_started
+      valkey:
+        condition: service_started
+      elastic:
+        condition: service_started
+    networks:
+      - local
+
+  worker:
+    build: 
+      context: .
+      dockerfile: docker/worker.Dockerfile
+    environment:
+      - VALKEY_HOST=valkey
+      - VALKEY_PORT=${VALKEY_PORT}
+      - VALKEY_PASSWORD=${VALKEY_PASSWORD}
+    depends_on:
+      valkey:
+        condition: service_started
+    networks:
+      - local
 
 volumes:
   queue-data:
