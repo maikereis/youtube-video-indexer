@@ -27,6 +27,10 @@ dependencies = [
     "youtube-transcript-api>=1.0.3",
 ]
 
+[build-system]
+requires = ["setuptools>=42"]
+build-backend = "setuptools.build_meta"
+
 [dependency-groups]
 dev = [
     "isort>=6.0.1",
