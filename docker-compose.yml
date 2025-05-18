@@ -2,15 +2,15 @@ services:
   valkey:
     image: valkey/valkey:8.1.1-alpine
     env_file: .env
-    ports:
-      - ${VALKEY_PORT}:6379
     environment:
       - VALKEY_PASSWORD=${VALKEY_PASSWORD}
     command: sh -c "valkey-server --requirepass \"$VALKEY_PASSWORD\""
-    networks:
-      - local
+    ports:
+      - ${VALKEY_PORT}:6379
     volumes:
       - queue-data:/data
+    networks:
+      - local
     healthcheck:
       test: ["CMD", "valkey-cli", "PING"]
       interval: 30s
@@ -21,9 +21,6 @@ services:
   mongo:
     image: mongo:8.0
     env_file: .env
-    logging:
-      options:
-        max-size: 1g
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
@@ -32,6 +29,11 @@ services:
     volumes:
       - mongo-data:/data/db
       - ./init-mongo.sh:/docker-entrypoint-initdb.d/init-mongo.sh:ro
+    networks:
+      - local
+    logging:
+      options:
+        max-size: 1g
     healthcheck:
       test: >
         mongosh --quiet --eval "db.adminCommand('ping').ok" 
@@ -40,8 +42,6 @@ services:
       timeout: 10s
       retries: 5
       start_period: 20s
-    networks:
-      - local
     restart: always
 
   elastic:
@@ -56,13 +56,13 @@ services:
       - 9300:9300
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - local
     healthcheck:
         test: curl -s http://localhost:$ELASTIC_PORT/_cluster/health | grep -q '"status"' || exit 1
         interval: 30s
         timeout: 10s
         retries: 5
-    networks:
-      - local
     restart: unless-stopped
 
   api:
@@ -78,6 +78,8 @@ services:
       - VALKEY_PASSWORD=${VALKEY_PASSWORD}
     networks:
       - local
+    restart: unless-stopped
+
 
   indexer:
     build: 
@@ -99,6 +101,8 @@ services:
       - VALKEY_HOST=valkey
       - VALKEY_PORT=${VALKEY_PORT}
       - VALKEY_PASSWORD=${VALKEY_PASSWORD}
+    networks:
+      - local
     depends_on:
       mongo:
         condition: service_healthy
@@ -106,8 +110,8 @@ services:
         condition: service_healthy
       elastic:
         condition: service_healthy
-    networks:
-      - local
+    restart: unless-stopped
+
 
   worker:
     build: 
@@ -118,11 +122,12 @@ services:
       - VALKEY_HOST=valkey
       - VALKEY_PORT=${VALKEY_PORT}
       - VALKEY_PASSWORD=${VALKEY_PASSWORD}
+    networks:
+      - local
     depends_on:
       valkey:
         condition: service_healthy
-    networks:
-      - local
+    restart: unless-stopped
 
 volumes:
   queue-data:
