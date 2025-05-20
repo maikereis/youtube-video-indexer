@@ -1,47 +1,16 @@
 import json
-from abc import ABC, abstractmethod
 from typing import Any, List
 
-import valkey
-
+from ytindexer.database import ValkeyConnection
 from ytindexer.config import settings
 from ytindexer.logging import logger
-
-
-class Queue(ABC):
-    """Abstract base class for queue implementations"""
-    
-    @abstractmethod
-    def enqueue(self, task_data: Any) -> None:
-        """Add an item to the queue"""
-        pass
-    
-    @abstractmethod
-    def dequeue(self) -> Any:
-        """Remove and return an item from the queue"""
-        pass
-
-    @abstractmethod
-    def batch_dequeue(self, batch_size: int) -> List[Any]:
-        """Remove and return multiple items from the queue"""
-        pass
-
-    @abstractmethod
-    def queue_size(self) -> int:
-        """Return the current size of the queue"""
-        pass
+from ytindexer.queues.base import Queue
 
 class NotificationQueue(Queue):
     """Queue implementation using Valkey/Redis"""
     
-    def __init__(self, queue_name: str = "queue"):
-        self.client = valkey.Valkey(
-            host=settings.valkey.host, 
-            port=settings.valkey.port, 
-            username=None,
-            password=settings.valkey.password.get_secret_value(),
-            db=0
-        )
+    def __init__(self, queue_name: str = "queue", client: Any = ValkeyConnection()):
+        self.client = client
         self.queue_name = queue_name
         logger.info(f"Initialized NotificationQueue with name: {queue_name}")
     
