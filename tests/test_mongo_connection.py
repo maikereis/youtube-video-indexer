@@ -1,26 +1,20 @@
-import os
-
 import pytest
-from dotenv import load_dotenv
+from unittest.mock import patch, MagicMock
 from motor.motor_asyncio import AsyncIOMotorClient
+from ytindexer.database import MongoConnection
 
-load_dotenv()  # Load variables from .env
+def test_mongo_connection_singleton():
+    with patch('ytindexer.database.mongo.AsyncIOMotorClient') as mock_client:
+        # Create a mock instance to be returned by AsyncIOMotorClient
+        mock_instance = MagicMock(spec=AsyncIOMotorClient)
+        mock_client.return_value = mock_instance
 
-@pytest.mark.asyncio
-async def test_mongodb_connection():
+        # Instantiate MongoConnection twice
+        client1 = MongoConnection()
+        client2 = MongoConnection()
 
-    #host = os.getenv("MONGO_HOST")
-    port = os.getenv("MONGO_PORT")
-    user = os.getenv("MONGO_USERNAME")
-    password = os.getenv("MONGO_PASSWORD")
-    auth = os.getenv("MONGO_AUTH")
+        # Assert that AsyncIOMotorClient was called only once
+        mock_client.assert_called_once()
 
-    uri = f"mongodb://{user}:{password}@localhost:{port}/default_db?authSource={auth}"
-    
-    client = AsyncIOMotorClient(uri, serverSelectionTimeoutMS=5000)
-
-    try:
-        response = await client.admin.command('ping')
-        assert response['ok'] == 1.0  # Check that ping succeeded
-    except Exception as e:
-        pytest.fail(f"Could not connect to MongoDB: {e}")
+        # Assert that both instances are the same (singleton behavior)
+        assert client1 is client2

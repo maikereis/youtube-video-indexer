@@ -1,23 +1,20 @@
-import os
-
 import pytest
-from dotenv import load_dotenv
+from unittest.mock import patch, MagicMock
 from elasticsearch import AsyncElasticsearch
+from ytindexer.database import ElasticConnection
 
-load_dotenv()  # Load variables from .env
+def test_elastic_connection_singleton():
+    with patch('ytindexer.database.elastic.AsyncElasticsearch') as mock_client:
+        # Create a mock instance to be returned by AsyncElasticsearch
+        mock_instance = MagicMock(spec=AsyncElasticsearch)
+        mock_client.return_value = mock_instance
 
-@pytest.mark.asyncio
-async def test_elasticsearch_connection():
-    #host = os.getenv("ELASTIC_HOST", "localhost")
-    port = os.getenv("ELASTIC_PORT", "9200")
-    url = f"http://localhost:{port}"
+        # Instantiate ElasticConnection twice
+        client1 = ElasticConnection()
+        client2 = ElasticConnection()
 
-    es = AsyncElasticsearch(hosts=[url])
+        # Assert that AsyncElasticsearch was called only once
+        mock_client.assert_called_once()
 
-    try:
-        is_alive = await es.ping()
-        assert is_alive, "Elasticsearch did not respond to ping"
-    except Exception as e:
-        pytest.fail(f"Error pinging Elasticsearch: {e}")
-    finally:
-        await es.close()
+        # Assert that both instances are the same (singleton behavior)
+        assert client1 is client2
