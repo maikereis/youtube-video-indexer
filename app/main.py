@@ -8,7 +8,7 @@ from slowapi.util import get_remote_address
 
 from ytindexer.config import settings
 from ytindexer.logging import configure_logging, logger
-from ytindexer.queue import NotificationQueue
+from ytindexer.queues import NotificationQueue
 
 configure_logging(log_level="INFO", log_file="logs/api.log")
 

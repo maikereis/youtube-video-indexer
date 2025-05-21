@@ -1,6 +1,6 @@
 import asyncio
 
-from ytindexer.queue import NotificationQueue
+from ytindexer.queues import NotificationQueue
 from ytindexer.worker import YouTubeNotificationProcessor
 
 
@@ -9,7 +9,7 @@ async def main():
     metadata_queue = NotificationQueue(queue_name="metadata_queue")
 
     indexer = YouTubeNotificationProcessor(notification_queue, metadata_queue)
-    await indexer.run_worker()
+    await indexer.run()
 
 if __name__ == "__main__":
     asyncio.run(main())

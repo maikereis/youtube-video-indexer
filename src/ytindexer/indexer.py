@@ -10,7 +10,7 @@ from pymongo.errors import OperationFailure
 
 from ytindexer.config import settings
 from ytindexer.logging import logger
-from ytindexer.queue import Queue
+from ytindexer.queues import Queue
 
 VIDEOS_COLLECTION_INDEXES = ("video_id", "channel_id", "published",)
 CHANNELS_COLLECTION_INDEXES = ("channel_id",)
