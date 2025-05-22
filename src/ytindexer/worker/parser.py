@@ -1,7 +1,9 @@
 import xml.etree.ElementTree as ET
 from datetime import datetime
 from typing import Any, Dict, Optional
+
 from ytindexer.logging import logger
+
 
 class YouTubeNotificationParser:
     """

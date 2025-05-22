@@ -1,7 +1,10 @@
+from unittest.mock import MagicMock, patch
+
 import pytest
-from unittest.mock import patch, MagicMock
 from elasticsearch import AsyncElasticsearch
+
 from ytindexer.database import ElasticConnection
+
 
 def test_elastic_connection_singleton():
     with patch('ytindexer.database.elastic.AsyncElasticsearch') as mock_client:

@@ -1,6 +1,8 @@
 from elasticsearch import AsyncElasticsearch
+
 from ytindexer.config import settings
 from ytindexer.logging import logger
+
 
 class ElasticConnection:
     _instance: AsyncElasticsearch | None = None

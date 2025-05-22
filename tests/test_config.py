@@ -3,7 +3,7 @@ import os
 import pytest
 from pydantic import SecretStr
 
-from ytindexer.config import GoogleAPISettings, ValkeySettings, Settings
+from ytindexer.config import GoogleAPISettings, Settings, ValkeySettings
 
 
 def test_queue_settings_defaults(monkeypatch):

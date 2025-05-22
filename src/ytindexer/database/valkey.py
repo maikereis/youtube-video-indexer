@@ -1,6 +1,8 @@
 import valkey
+
 from ytindexer.config import settings
 from ytindexer.logging import logger
+
 
 class ValkeyConnection:
     _instance: valkey.client.Valkey | None = None

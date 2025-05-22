@@ -1,7 +1,7 @@
 import asyncio
 
-from ytindexer.queues import NotificationQueue
 from ytindexer.indexer import VideoIndexer
+from ytindexer.queues import NotificationQueue
 
 
 async def main():

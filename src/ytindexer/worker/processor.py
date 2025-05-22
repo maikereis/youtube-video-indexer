@@ -1,10 +1,11 @@
 import asyncio
 import traceback
-
 from typing import Any, Dict, Optional
+
 from ytindexer.logging import logger
 from ytindexer.queues import Queue
 from ytindexer.worker.parser import YouTubeNotificationParser
+
 
 class YouTubeNotificationProcessor:
     """

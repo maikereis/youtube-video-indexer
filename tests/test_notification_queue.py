@@ -1,11 +1,13 @@
 import json
-import pytest
-from unittest.mock import MagicMock, patch
 from typing import Any, List
+from unittest.mock import MagicMock, patch
+
+import pytest
 
 from ytindexer.database import ValkeyConnection
 from ytindexer.queues.base import Queue
-from ytindexer.queues.notification import NotificationQueue  # Assuming the class is in this module
+from ytindexer.queues.notification import \
+    NotificationQueue  # Assuming the class is in this module
 
 
 @pytest.fixture

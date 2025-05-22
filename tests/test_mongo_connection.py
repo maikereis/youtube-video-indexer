@@ -1,7 +1,10 @@
+from unittest.mock import MagicMock, patch
+
 import pytest
-from unittest.mock import patch, MagicMock
 from motor.motor_asyncio import AsyncIOMotorClient
+
 from ytindexer.database import MongoConnection
+
 
 def test_mongo_connection_singleton():
     with patch('ytindexer.database.mongo.AsyncIOMotorClient') as mock_client:
