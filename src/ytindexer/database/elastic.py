@@ -1,4 +1,4 @@
-from elasticsearch import AsyncElasticsearch
+from elasticsearch import AsyncElasticsearch, ConnectionError
 
 from ytindexer.config import settings
 from ytindexer.logging import logger
@@ -11,7 +11,7 @@ class ElasticConnection:
         if cls._instance is None:
             try:
                 cls._instance = AsyncElasticsearch(settings.search.dsn)
-            except valkey.exceptions.ConnectionError as conn_fail:
+            except ConnectionError as conn_fail:
                 logger.error("Couldn't connect to the Elastic: {error}", error=conn_fail)
                 raise
 
