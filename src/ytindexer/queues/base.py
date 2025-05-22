@@ -1,5 +1,6 @@
-from typing import Any, List
 from abc import ABC, abstractmethod
+from typing import Any, List
+
 
 class Queue(ABC):
     """Abstract base class for queue implementations"""

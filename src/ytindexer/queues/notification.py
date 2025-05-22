@@ -1,10 +1,11 @@
 import json
 from typing import Any, List
 
-from ytindexer.database import ValkeyConnection
 from ytindexer.config import settings
+from ytindexer.database import ValkeyConnection
 from ytindexer.logging import logger
 from ytindexer.queues.base import Queue
+
 
 class NotificationQueue(Queue):
     """Queue implementation using Valkey/Redis"""

@@ -1,6 +1,8 @@
 from motor.motor_asyncio import AsyncIOMotorClient
+
 from ytindexer.config import settings
 from ytindexer.logging import logger
+
 
 class MongoConnection:
     _instance: AsyncIOMotorClient | None = None
