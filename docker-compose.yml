@@ -76,6 +76,12 @@ services:
       - VALKEY_HOST=valkey
       - VALKEY_PORT=${VALKEY_PORT}
       - VALKEY_PASSWORD=${VALKEY_PASSWORD}
+      - ELASTIC_INDEX_NAME=videos
+      - ELASTIC_HOST=elastic
+      - ELASTIC_PORT=${ELASTIC_PORT}
+      - ELASTIC_USERNAME=${ELASTIC_USERNAME}
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - ELASTIC_SCHEME=http
     networks:
       - local
     restart: unless-stopped
