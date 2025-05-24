@@ -4,7 +4,7 @@ This document outlines the architecture for the YouTube PubSubHubbub indexer sys
 
 ## System Overview
 
-The system follows an event-driven microservices architecture, designed to efficiently receive, process, and index YouTube content notifications. The architecture emphasizes scalability, fault tolerance, and separation of concerns.
+The system follows an event-driven architecture, designed to efficiently receive, process, and index YouTube content notifications. The architecture emphasizes scalability, fault tolerance, and separation of concerns.
 
 ## Diagram
 
@@ -93,3 +93,74 @@ Each service can be independently scaled:
 - Queue Worker: Scale to process more notifications simultaneously
 - Indexing Service: Scale to handle higher indexing throughput
 - Data Stores: Deploy as clusters when needed for higher loads
+
+## Load Test Analysis
+
+### Test Environment
+- **Processor:** AMD Ryzen 7 5700X (8 cores @ 3.40 GHz)
+- **Memory:** 32 GB DDR4 @ 3600 MHz
+- **OS:** Windows 11 Pro using WSL2 (Ubuntu 24.04.2 LTS)
+- **Tool:** Locust
+
+---
+
+### Results Overview
+
+**Performance Metrics:**
+- Target Endpoint: `/webhooks` (POST)
+- Total Requests: 28,447
+- Failures: **0%** (Excellent stability)
+- Requests Per Second (RPS): Peaks at **245.4 RPS**
+
+<img src="assets/load_test.png" alt="First stage diagram" width="500">
+
+
+**Request Latency:**
+
+| Metric          | Value (ms) |
+|-----------------|-------------|
+| Median          | 1200        |
+| 95th Percentile | 3600        |
+| 99th Percentile | 3700        |
+| Average         | 1533        |
+| Max             | 4285        |
+| Min             | 3           |
+
+> The **median response time of 1200ms** and a **95th percentile at 3600ms** indicate the server is responsive at lower loads but starts struggling under peak conditions.
+
+<img src="assets/load_test_summary.png" alt="First stage diagram" width="500">
+
+
+---
+
+**Requests per Second:**
+- Gradual ramp-up to **~230-250 RPS**.
+- No failures observed during the run (Failure/s = 0).
+
+**Response Times:**
+- As load increases:
+    - **50th percentile rises from ~300ms to 1000ms.**
+    - **95th percentile peaks around 1600ms to 3700ms.**
+- Clear correlation between user increase and response time degradation.
+
+**Users:**
+- Test scaled up to around **680 concurrent users**.
+- At this level, the RPS stabilized with no failures, but latency rose significantly.
+
+---
+
+### Interpretation
+
+- Your service handles **up to ~230-250 RPS with 680 users without errors**, which is solid.
+- **Latency scaling is the key bottleneck:**
+  - Median creeping above 1000ms under load.
+  - 95th/99th percentiles reaching beyond 3 seconds indicates stress on the server.
+
+---
+
+### Potential Bottlenecks
+
+- I/O-bound operations (Database, Network, File writes).
+- Thread contention or locking.
+- WSL2 limitations (not a full Linux kernel, potential networking overhead).
+- CPU-bound processing spikes due to synchronous tasks.
