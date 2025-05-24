@@ -1,6 +1,10 @@
-import pytest
 import asyncio
-from ytindexer.database import AsyncDatabaseConnection  # adjust if it's in a submodule, e.g. ytindexer.db.base
+
+import pytest
+
+from ytindexer.database import \
+    AsyncDatabaseConnection  # adjust if it's in a submodule, e.g. ytindexer.db.base
+
 
 # Minimal concrete subclass for testing
 class DummyConnection(AsyncDatabaseConnection[str]):

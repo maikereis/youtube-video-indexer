@@ -1,8 +1,10 @@
 import asyncio
 
 import valkey
+
 from ytindexer.config import settings
 from ytindexer.logging import logger
+
 from .base import AsyncDatabaseConnection
 
 
