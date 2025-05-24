@@ -1,9 +1,12 @@
 import asyncio
+from unittest.mock import AsyncMock, MagicMock, patch
+
 import pytest
-from unittest.mock import patch, MagicMock, AsyncMock
 import valkey
 from valkey.exceptions import ConnectionError
-from ytindexer.database.valkey import ValkeyConnection  # adjust import as needed
+
+from ytindexer.database.valkey import \
+    ValkeyConnection  # adjust import as needed
 
 
 @pytest.mark.asyncio

@@ -1,86 +1,92 @@
+import time
 import traceback
 from typing import Any, Dict
 
-from ytindexer.config import settings
-from ytindexer.database.elastic import ElasticConnection
 from ytindexer.logging import logger
 
+from .config import ElasticsearchConfig, RetryConfig
+from .health import HealthCheckable, HealthStatus
+from .results import OperationResult
+from .retry import RetryableOperation
 
-class SearchIndexingService:
+
+class SearchIndexingService(HealthCheckable):
     """Handles video search indexing in Elasticsearch"""
     
-    def __init__(self, client = ElasticConnection()):
+    def __init__(self, client: Any, config: ElasticsearchConfig, retry_config: RetryConfig):
         self.client = client
-        self.index_name = settings.search.index_name
+        self.config = config
+        self.retry = RetryableOperation(retry_config)
         logger.info("Initialized SearchIndexingService")
 
-    async def ensure_index(self):
+    async def ensure_index(self) -> OperationResult:
         """Create Elasticsearch index if it doesn't exist"""
-        if not await self.client.indices.exists(index=self.index_name):
-            mapping = {
-                "mappings": {
-                    "properties": {
-                        "video_id": {"type": "keyword"},
-                        "channel_id": {"type": "keyword"},
-                        "title": {
-                            "type": "text",
-                            "analyzer": "standard",
-                            "fields": {
-                                "keyword": {"type": "keyword", "ignore_above": 256}
-                            }
-                        },
-                        "description": {"type": "text", "analyzer": "standard"},
-                        "published": {"type": "date"},
-                        "updated": {"type": "date"},
-                        "author": {
-                            "type": "text",
-                            "fields": {
-                                "keyword": {"type": "keyword", "ignore_above": 256}
-                            }
-                        },
-                        "tags": {"type": "keyword"},
-                        "categories": {"type": "keyword"},
-                        "duration": {"type": "integer"},
-                        "view_count": {"type": "long"},
-                        "like_count": {"type": "long"},
-                        "comment_count": {"type": "long"},
-                        "processed_at": {"type": "date"}
-                    }
-                },
-                "settings": {
-                    "number_of_shards": 1,
-                    "number_of_replicas": 0
-                }
-            }
-            await self.client.indices.create(index=self.index_name, body=mapping)
-            logger.info(f"Created Elasticsearch index: {self.index_name}")
-
-    async def index_video(self, video_data: Dict[str, Any]) -> bool:
-        """
-        Index video metadata in Elasticsearch
-        
-        Returns True if successful, False otherwise
-        """
         try:
-            video_id = video_data.get("video_id")
-            if not video_id:
-                logger.warning("Video data missing video_id, skipping indexing")
-                return False
-            
+            if not await self.client.indices.exists(index=self.config.index_name):
+                await self.client.indices.create(
+                    index=self.config.index_name, 
+                    body=self.config.mapping
+                )
+                logger.info(f"Created Elasticsearch index: {self.config.index_name}")
+                return OperationResult.success(f"Created index: {self.config.index_name}")
+            else:
+                return OperationResult.success(f"Index already exists: {self.config.index_name}")
+        except Exception as e:
+            logger.error(f"Failed to ensure index: {str(e)}")
+            return OperationResult.failure(f"Failed to ensure index: {str(e)}", e)
+
+    async def index_video(self, video_data: Dict[str, Any]) -> OperationResult:
+        """Index video metadata in Elasticsearch with retry logic"""
+        video_id = video_data.get("video_id")
+        if not video_id:
+            return OperationResult.failure("Video data missing video_id")
+        
+        async def _index_operation():
             await self.client.index(
-                index=self.index_name,
+                index=self.config.index_name,
                 id=video_id,
                 body=video_data,
                 refresh=True
             )
-            
-            logger.debug(f"Indexed video in Elasticsearch: {video_id}")
-            return True
-            
+            return video_id
+        
+        try:
+            result_id = await self.retry.execute(_index_operation, f"index_video_{video_id}")
+            logger.debug(f"Indexed video in Elasticsearch: {result_id}")
+            return OperationResult.success(
+                f"Indexed video: {result_id}",
+                metadata={"video_id": result_id}
+            )
         except Exception as e:
             logger.error(f"Failed to index video in Elasticsearch: {str(e)}")
             logger.debug(traceback.format_exc())
-            return False
+            return OperationResult.failure(f"Failed to index video: {str(e)}", e)
+
+    async def health_check(self) -> HealthStatus:
+        """Check Elasticsearch cluster health"""
+        start_time = time.time()
+        try:
+            health = await self.client.cluster.health()
+            response_time = (time.time() - start_time) * 1000
+            
+            is_healthy = health.get('status') in ['green', 'yellow']
+            message = f"Cluster status: {health.get('status', 'unknown')}"
+            
+            return HealthStatus(
+                service_name="elasticsearch",
+                is_healthy=is_healthy,
+                response_time_ms=response_time,
+                message=message,
+                metadata=health
+            )
+        except Exception as e:
+            response_time = (time.time() - start_time) * 1000
+            return HealthStatus(
+                service_name="elasticsearch",
+                is_healthy=False,
+                response_time_ms=response_time,
+                message=f"Health check failed: {str(e)}"
+            )
 
     async def close(self):
         """Close the Elasticsearch client"""

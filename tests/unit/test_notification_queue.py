@@ -1,7 +1,11 @@
-import pytest
-from unittest.mock import MagicMock
 import json
-from ytindexer.queues import NotificationQueue  # Replace with the actual import path
+from unittest.mock import MagicMock
+
+import pytest
+
+from ytindexer.queues import \
+    NotificationQueue  # Replace with the actual import path
+
 
 @pytest.fixture
 def mock_redis_client():

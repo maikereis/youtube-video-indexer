@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, Response
+from fastapi import Depends, FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from slowapi import Limiter, _rate_limit_exceeded_handler
@@ -7,14 +7,20 @@ from slowapi.middleware import SlowAPIMiddleware
 from slowapi.util import get_remote_address
 
 from ytindexer.config import settings
+from ytindexer.database import ValkeyConnection
 from ytindexer.logging import configure_logging, logger
 from ytindexer.queues import NotificationQueue
 
 configure_logging(log_level="INFO", log_file="logs/api.log")
 
-queue_name = "notification_queue"
-message_queue = NotificationQueue(queue_name)
+async def init_notification_queue() -> NotificationQueue:
+    client = await ValkeyConnection(
+        host=settings.valkey.host,
+        port=settings.valkey.port,
+        password=settings.valkey.password.get_secret_value(),
+    ).connect()
 
+    return NotificationQueue(client, "notification-queue")
 
 app = FastAPI(
     title="YouTube Indexer API",
@@ -50,7 +56,7 @@ app.add_middleware(
 
 limiter = Limiter(
     key_func=get_remote_address,
-    default_limits=["5/minute"],
+    default_limits=["10000/minute"],
 )
 
 app.state.limiter = limiter
@@ -64,7 +70,7 @@ async def main():
 
 
 @app.get("/webhooks")
-@limiter.limit("10/minute")  # Example: limit to 10 requests per minute
+@limiter.limit("10000000000/minute")  # Example: limit to 10 requests per minute
 async def verify_subscription(request: Request):
     """Handle YouTube PubSubHubbub subscription verification"""
     hub_mode = request.query_params.get("hub.mode")
@@ -78,8 +84,11 @@ async def verify_subscription(request: Request):
 
 
 @app.post("/webhooks")
-@limiter.limit("5/minute")  # Example: limit to 5 requests per minute
-async def handle_notification(request: Request):
+@limiter.limit("1000000000/minute")  # Example: limit to 5 requests per minute
+async def handle_notification(
+    request: Request,
+    notification_queue: NotificationQueue = Depends(init_notification_queue),
+):    
     """Handle YouTube PubSubHubbub content notification"""
     try:
         # Handle content update
@@ -87,7 +96,7 @@ async def handle_notification(request: Request):
         xml_data = content.decode("utf-8")
         
         # Enqueue notification for processing
-        message_queue.enqueue(xml_data)
+        notification_queue.enqueue(xml_data)
         logger.info("Enqueued YouTube notification")
         
         return Response(status_code=200)

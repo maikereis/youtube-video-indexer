@@ -1,8 +1,11 @@
 import asyncio
+
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 from pymongo.errors import ConnectionFailure
+
 from ytindexer.config import settings
 from ytindexer.logging import logger
+
 from .base import AsyncDatabaseConnection
 
 

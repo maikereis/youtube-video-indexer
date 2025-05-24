@@ -1,8 +1,10 @@
 import asyncio
-import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from ytindexer.worker import YouTubeNotificationProcessor, YouTubeNotificationParser  # adjust import accordingly
+import pytest
+
+from ytindexer.worker import (  # adjust import accordingly
+    YouTubeNotificationParser, YouTubeNotificationProcessor)
 
 
 @pytest.fixture

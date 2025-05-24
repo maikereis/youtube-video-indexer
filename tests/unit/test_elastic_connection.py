@@ -1,8 +1,12 @@
-import pytest
 import asyncio
-from unittest.mock import AsyncMock, patch, MagicMock
+from unittest.mock import AsyncMock, MagicMock, patch
+
+import pytest
 from elasticsearch import ConnectionError
-from ytindexer.database.elastic import ElasticConnection  # adjust import path as needed
+
+from ytindexer.database.elastic import \
+    ElasticConnection  # adjust import path as needed
+
 
 @pytest.mark.asyncio
 async def test_connect_success_logs_and_returns_client():

@@ -1,6 +1,9 @@
-import pytest
 from datetime import datetime, timezone
-from ytindexer.worker.parser import YouTubeNotificationParser, YouTubeNotification
+
+import pytest
+
+from ytindexer.worker.parser import (YouTubeNotification,
+                                     YouTubeNotificationParser)
 
 # Sample valid XML notification
 VALID_XML = """

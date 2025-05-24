@@ -1,8 +1,11 @@
 import asyncio
+from unittest.mock import AsyncMock, MagicMock, patch
+
 import pytest
-from unittest.mock import AsyncMock, patch, MagicMock
 from pymongo.errors import ConnectionFailure
+
 from ytindexer.database.mongo import MongoConnection  # Adjust import as needed
+
 
 @pytest.mark.asyncio
 async def test_connect_success_logs_and_returns_client():
