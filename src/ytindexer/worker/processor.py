@@ -5,6 +5,8 @@ from typing import Any, Dict, Optional
 from ytindexer.logging import logger
 from ytindexer.queues import Queue
 
+from .parser import YouTubeNotification
+
 
 class YouTubeNotificationProcessor:
     """
@@ -67,7 +69,12 @@ class YouTubeNotificationProcessor:
                 logger.error(f"Error during notification processing: {result}")
                 continue
             if result is not None:
-                self.output_queue.enqueue(result)
+                if isinstance(result, dict):
+                    self.output_queue.enqueue(result)
+                elif isinstance(result, YouTubeNotification):
+                    self.output_queue.enqueue(result.model_dump_json())
+                else:
+                    raise ValueError(f"Can't equeue payload with type: {type(result)}")
                 processed += 1
 
         logger.info(f"Processed {processed}/{len(notifications)} notifications")
