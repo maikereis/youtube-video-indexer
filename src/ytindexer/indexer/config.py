@@ -7,7 +7,7 @@ from typing import Any, Dict, Optional
 class ElasticsearchConfig:
     """Configuration for Elasticsearch indexing"""
 
-    index_name: str
+    index_name: str = 'videos'
     shards: int = 1
     replicas: int = 0
 
@@ -50,7 +50,7 @@ class ElasticsearchConfig:
 class MongoDBConfig:
     """Configuration for MongoDB collections and indexes"""
 
-    database_name: str
+    database_name: str = 'mongo'
     videos_collection: str = "videos"
     channels_collection: str = "channels"
 

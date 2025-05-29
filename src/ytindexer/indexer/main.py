@@ -1,5 +1,4 @@
 import asyncio
-from datetime import datetime, timezone
 
 from ytindexer.config import settings
 from ytindexer.database import (ElasticConnection, MongoConnection,
@@ -8,7 +7,6 @@ from ytindexer.indexer import (ChannelStatsService, ElasticsearchConfig,
                                MongoDBConfig, RetryConfig,
                                SearchIndexingService, VideoIndexingProcessor,
                                VideoStorageService)
-from ytindexer.indexer.results import OperationStatus
 from ytindexer.logging import logger
 from ytindexer.queues import NotificationQueue
 
@@ -16,7 +14,7 @@ from ytindexer.queues import NotificationQueue
 # Example configuration and setup
 async def main():
     # Configuration
-    es_config = ElasticsearchConfig(index_name="videos", shards=2, replicas=1)
+    es_config = ElasticsearchConfig(index_name=settings.search.index_name, shards=2, replicas=1)
 
     mongo_config = MongoDBConfig(
         database_name=settings.mongo.name,
