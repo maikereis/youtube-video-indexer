@@ -7,7 +7,7 @@ from slowapi.middleware import SlowAPIMiddleware
 
 from ytindexer.logging import configure_logging, logger
 
-from ytindexer.api.routes import webhooks, videos, health
+from ytindexer.api.routes import webhooks, videos, channels, health
 from ytindexer.api.dependencies import get_limiter
 
 configure_logging(log_level="INFO", log_file="logs/api.log")
@@ -27,6 +27,7 @@ logger.info("Including routes.")
 app.include_router(health.router)
 app.include_router(webhooks.router, prefix="/webhooks", tags=["webhooks"])
 app.include_router(videos.router, prefix="/api/videos", tags=["videos"])
+app.include_router(channels.router, prefix="/api/channels", tags=["channels"])
 
 logger.info("Configuring middlewares.")
 

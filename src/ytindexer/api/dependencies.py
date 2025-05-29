@@ -10,7 +10,7 @@ These functions are designed to be used with FastAPI's dependency injection syst
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 
-from ytindexer.database import ValkeyConnection, ElasticConnection
+from ytindexer.database import ValkeyConnection, ElasticConnection, MongoConnection
 from ytindexer.queues import NotificationQueue
 from ytindexer.config import settings
 
@@ -55,4 +55,16 @@ async def get_elastic_connection() -> ElasticConnection:
         ElasticConnection: An instance connected to the Elasticsearch cluster.
     """
     client = await ElasticConnection(settings.search.dsn).connect()
+    return client
+
+
+async def get_mongo_connection() -> MongoConnection:
+    """Create and return an MongoDB connection instance.
+
+    Connects to the MongoDB using the DSN specified in the settings.
+
+    Returns:
+        MongoDB: An instance connected to the MongoDB.
+    """
+    client = await MongoConnection(settings.mongo.dsn).connect()
     return client
