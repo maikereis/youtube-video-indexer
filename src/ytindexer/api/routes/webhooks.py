@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends, Request, Response
-from slowapi import Limiter
 
 from ytindexer.queues import NotificationQueue
 from ytindexer.api.dependencies import get_limiter, get_notification_queue
