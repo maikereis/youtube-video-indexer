@@ -17,7 +17,7 @@ limiter = get_limiter()
 # API routes for video data
 @router.get("", response_model=SearchResults)
 @limiter.limit("30/minute")
-async def search_videos(
+async def search(
     request: Request,
     q: Optional[str] = None,
     channel_id: Optional[str] = None,

@@ -26,7 +26,7 @@ logger.info("Including routes.")
 
 app.include_router(health.router)
 app.include_router(webhooks.router, prefix="/webhooks", tags=["webhooks"])
-app.include_router(videos.router, prefix="/videos", tags=["videos"])
+app.include_router(videos.router, prefix="/api/videos", tags=["videos"])
 
 logger.info("Configuring middlewares.")
 
