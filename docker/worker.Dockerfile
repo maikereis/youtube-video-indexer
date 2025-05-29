@@ -14,9 +14,6 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
     uv sync --locked --no-install-project --no-dev
 
-# Import the API code
-COPY services/worker /app/
-
 # Import the package code
 COPY src/ytindexer  /app/ytindexer
 
@@ -33,5 +30,5 @@ ENV PATH="/app/.venv/bin:$PATH"
 # Reset the entrypoint, don't invoke `uv`
 ENTRYPOINT []
 
-CMD ["python", "main.py"]
+CMD ["python", "ytindexer/worker/main.py"]
 #CMD ["tail", "-f", "/dev/null"]
