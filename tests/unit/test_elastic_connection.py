@@ -76,7 +76,7 @@ async def test_close_without_connect_does_nothing():
 async def test_concurrent_connect_calls_create_single_client():
     dsn = "http://localhost:9200"
 
-    fake_client = MagicMock()
+    fake_client = AsyncMock()
 
     with patch("ytindexer.database.elastic.AsyncElasticsearch", return_value=fake_client) as mock_elastic:
         conn = ElasticConnection(dsn)
