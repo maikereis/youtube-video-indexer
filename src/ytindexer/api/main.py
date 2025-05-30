@@ -5,10 +5,9 @@ from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 
-from ytindexer.logging import configure_logging, logger
-
-from ytindexer.api.routes import webhooks, videos, channels, health
 from ytindexer.api.dependencies import get_limiter
+from ytindexer.api.routes import channels, health, videos, webhooks
+from ytindexer.logging import configure_logging, logger
 
 configure_logging(log_level="INFO", log_file="logs/api.log")
 

@@ -1,19 +1,18 @@
-from typing import Optional, Any
+from typing import Any, Optional
 
-from fastapi import APIRouter, Request, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 
 from ytindexer.api.dependencies import get_limiter, get_mongo_connection
-from ytindexer.api.models.response import ChannelResults, ChannelMetadata
-
+from ytindexer.api.models.response import ChannelMetadata, ChannelResults
 from ytindexer.config import settings
 from ytindexer.indexer.config import MongoDBConfig
-
 from ytindexer.logging import configure_logging, logger
 
 configure_logging(log_level="INFO", log_file="logs/channels.log")
 
 router = APIRouter()
 limiter = get_limiter()
+
 
 @router.get("", response_model=ChannelResults)
 @limiter.limit("30/minute")
@@ -23,11 +22,11 @@ async def list_channels(
     sort: str = "last_activity:desc",
     page: int = Query(1, ge=1),
     page_size: int = Query(10, ge=1, le=100),
-    mongo_conn: Any = Depends(get_mongo_connection)
+    mongo_conn: Any = Depends(get_mongo_connection),
 ):
     """
     List indexed channels
-    
+
     - **q**: Optional search query for channel name
     - **sort**: Sort order (last_activity:desc, video_count:desc, etc.)
     - **page**: Page number
@@ -75,7 +74,7 @@ async def list_channels(
             page_size=page_size,
             page_count=total_pages,
         )
-        
+
     except Exception as e:
         logger.error(f"Error listing channels: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))

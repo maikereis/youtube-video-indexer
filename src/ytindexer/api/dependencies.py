@@ -10,9 +10,9 @@ These functions are designed to be used with FastAPI's dependency injection syst
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 
-from ytindexer.database import ValkeyConnection, ElasticConnection, MongoConnection
-from ytindexer.queues import NotificationQueue
 from ytindexer.config import settings
+from ytindexer.database import ElasticConnection, MongoConnection, ValkeyConnection
+from ytindexer.queues import NotificationQueue
 
 
 def get_limiter() -> Limiter:
