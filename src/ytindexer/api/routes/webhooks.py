@@ -1,13 +1,14 @@
 from fastapi import APIRouter, Depends, Request, Response
 
-from ytindexer.queues import NotificationQueue
 from ytindexer.api.dependencies import get_limiter, get_notification_queue
 from ytindexer.logging import configure_logging, logger
+from ytindexer.queues import NotificationQueue
 
 configure_logging(log_level="INFO", log_file="logs/webhooks.log")
 
 router = APIRouter()
 limiter = get_limiter()
+
 
 @router.get("")
 @limiter.limit("30/minute")  # Example: limit to 10 requests per minute
@@ -28,17 +29,17 @@ async def verify_subscription(request: Request):
 async def handle_notification(
     request: Request,
     notification_queue: NotificationQueue = Depends(get_notification_queue),
-):    
+):
     """Handle YouTube PubSubHubbub content notification"""
     try:
         # Handle content update
         content = await request.body()
         xml_data = content.decode("utf-8")
-        
+
         # Enqueue notification for processing
         notification_queue.enqueue(xml_data)
         logger.info("Enqueued YouTube notification")
-        
+
         return Response(status_code=200)
     except Exception as e:
         logger.error(f"Error handling notification: {str(e)}")

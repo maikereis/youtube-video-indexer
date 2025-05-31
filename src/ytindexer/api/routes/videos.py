@@ -1,18 +1,17 @@
-from typing import Optional, Any
+from typing import Any, Optional
 
-from fastapi import APIRouter, Request, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 
-from ytindexer.api.dependencies import get_limiter, get_elastic_connection
+from ytindexer.api.dependencies import get_elastic_connection, get_limiter
 from ytindexer.api.models.response import SearchResults, VideoMetadata
-
 from ytindexer.config import settings
-
 from ytindexer.logging import configure_logging, logger
 
 configure_logging(log_level="INFO", log_file="logs/videos.log")
 
 router = APIRouter()
 limiter = get_limiter()
+
 
 # API routes for video data
 @router.get("", response_model=SearchResults)
@@ -26,11 +25,11 @@ async def search(
     sort: str = "published:desc",
     page: int = Query(1, ge=1),
     page_size: int = Query(10, ge=1, le=100),
-    es_conn: Any = Depends(get_elastic_connection)
+    es_conn: Any = Depends(get_elastic_connection),
 ):
     """
     Search for videos with various filters
-    
+
     - **q**: Optional search query for video title/description
     - **channel_id**: Optional filter by channel ID
     - **from_date**: Optional start date filter (ISO format)

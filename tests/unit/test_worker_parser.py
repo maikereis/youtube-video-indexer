@@ -1,9 +1,8 @@
+"""This test the capacity of worker parser handle notification payload"""
+
 from datetime import datetime, timezone
 
-import pytest
-
-from ytindexer.worker.parser import (YouTubeNotification,
-                                     YouTubeNotificationParser)
+from ytindexer.worker.parser import YouTubeNotification, YouTubeNotificationParser
 
 # Sample valid XML notification
 VALID_XML = """
@@ -43,6 +42,7 @@ MISSING_VIDEO_ID_XML = """
 # Sample malformed XML
 MALFORMED_XML = "<feed><entry><yt:videoId>abc123</yt:videoId></entry>"
 
+
 def test_parse_valid_notification():
     """Test parsing of a valid YouTube notification XML."""
     result = YouTubeNotificationParser.parse(VALID_XML)
@@ -58,10 +58,12 @@ def test_parse_valid_notification():
     assert result.source == "pubsubhubbub"
     assert isinstance(result.processed_at, datetime)
 
+
 def test_parse_missing_video_id():
     """Test parsing of XML missing the videoId."""
     result = YouTubeNotificationParser.parse(MISSING_VIDEO_ID_XML)
     assert result is None
+
 
 def test_parse_malformed_xml():
     """Test parsing of malformed XML."""

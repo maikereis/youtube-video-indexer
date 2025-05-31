@@ -1,32 +1,72 @@
+"""
+Unit tests for YouTubeNotificationProcessor and YouTubeNotificationParser.
+
+This test suite verifies the behavior of the notification processor, including:
+- Parsing XML notifications.
+- Handling parsing failures and exceptions.
+- Processing batches of notifications.
+- Running the processor loop with shutdown behavior.
+
+Tested classes:
+- YouTubeNotificationProcessor
+- YouTubeNotificationParser
+
+Fixtures:
+- mock_parser: Mocks the parser interface.
+- mock_notification_queue: Mocks the input notification queue.
+- mock_output_queue: Mocks the output queue for processed notifications.
+"""
+
 import asyncio
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from ytindexer.worker import (  # adjust import accordingly
-    YouTubeNotificationParser, YouTubeNotificationProcessor)
+from ytindexer.worker import YouTubeNotificationParser, YouTubeNotificationProcessor
 
 
 @pytest.fixture
 def mock_parser():
-    parser = MagicMock()
-    return parser
+    """Fixture for mocking the notification parser.
+
+    Returns:
+        MagicMock: Mocked parser instance.
+    """
+    return MagicMock()
 
 
 @pytest.fixture
 def mock_notification_queue():
-    queue = MagicMock()
-    return queue
+    """Fixture for mocking the input notification queue.
+
+    Returns:
+        MagicMock: Mocked notification queue instance.
+    """
+    return MagicMock()
 
 
 @pytest.fixture
 def mock_output_queue():
-    queue = MagicMock()
-    return queue
+    """Fixture for mocking the output queue.
+
+    Returns:
+        MagicMock: Mocked output queue instance.
+    """
+    return MagicMock()
 
 
 @pytest.mark.asyncio
-async def test_process_notification_success(mock_parser, mock_notification_queue, mock_output_queue):
+async def test_process_notification_success(
+    mock_parser, mock_notification_queue, mock_output_queue
+):
+    """Test successful processing of a single XML notification.
+
+    Args:
+        mock_parser (MagicMock): Mocked parser.
+        mock_notification_queue (MagicMock): Mocked notification queue.
+        mock_output_queue (MagicMock): Mocked output queue.
+    """
+
     xml_data = "<xml>some data</xml>"
     expected_metadata = {"video_id": "123"}
     mock_parser.parse.return_value = expected_metadata
@@ -34,7 +74,7 @@ async def test_process_notification_success(mock_parser, mock_notification_queue
     processor = YouTubeNotificationProcessor(
         notification_queue=mock_notification_queue,
         output_queue=mock_output_queue,
-        parser=mock_parser
+        parser=mock_parser,
     )
 
     result = await processor.process_notification(xml_data)
@@ -43,13 +83,23 @@ async def test_process_notification_success(mock_parser, mock_notification_queue
 
 
 @pytest.mark.asyncio
-async def test_process_notification_parse_returns_none(mock_parser, mock_notification_queue, mock_output_queue):
+async def test_process_notification_parse_returns_none(
+    mock_parser, mock_notification_queue, mock_output_queue
+):
+    """Test process_notification when parser returns None (invalid XML).
+
+    Args:
+        mock_parser (MagicMock): Mocked parser returning None.
+        mock_notification_queue (MagicMock): Mocked notification queue.
+        mock_output_queue (MagicMock): Mocked output queue.
+    """
+
     mock_parser.parse.return_value = None
 
     processor = YouTubeNotificationProcessor(
         notification_queue=mock_notification_queue,
         output_queue=mock_output_queue,
-        parser=mock_parser
+        parser=mock_parser,
     )
 
     result = await processor.process_notification("<xml>data</xml>")
@@ -57,13 +107,23 @@ async def test_process_notification_parse_returns_none(mock_parser, mock_notific
 
 
 @pytest.mark.asyncio
-async def test_process_notification_parse_raises_exception(mock_parser, mock_notification_queue, mock_output_queue):
+async def test_process_notification_parse_raises_exception(
+    mock_parser, mock_notification_queue, mock_output_queue
+):
+    """Test process_notification gracefully handles parser exceptions.
+
+    Args:
+        mock_parser (MagicMock): Mocked parser raising an exception.
+        mock_notification_queue (MagicMock): Mocked notification queue.
+        mock_output_queue (MagicMock): Mocked output queue.
+    """
+
     mock_parser.parse.side_effect = Exception("parse error")
 
     processor = YouTubeNotificationProcessor(
         notification_queue=mock_notification_queue,
         output_queue=mock_output_queue,
-        parser=mock_parser
+        parser=mock_parser,
     )
 
     result = await processor.process_notification("<xml>data</xml>")
@@ -71,7 +131,21 @@ async def test_process_notification_parse_raises_exception(mock_parser, mock_not
 
 
 @pytest.mark.asyncio
-async def test_process_batch_success_and_failure(mock_parser, mock_notification_queue, mock_output_queue):
+async def test_process_batch_success_and_failure(
+    mock_parser, mock_notification_queue, mock_output_queue
+):
+    """Test process_batch handles a mix of successful, failed, and empty notifications.
+
+    Simulates:
+    - A successful parse.
+    - A parser exception.
+    - A parser returning None.
+
+    Args:
+        mock_parser (MagicMock): Mocked parser.
+        mock_notification_queue (MagicMock): Mocked notification queue with multiple items.
+        mock_output_queue (MagicMock): Mocked output queue.
+    """
     notifications = ["n1", "n2", "n3"]
     # Simulate dequeues return values
     mock_notification_queue.dequeue.side_effect = notifications + [None]
@@ -88,11 +162,13 @@ async def test_process_batch_success_and_failure(mock_parser, mock_notification_
     processor = YouTubeNotificationProcessor(
         notification_queue=mock_notification_queue,
         output_queue=mock_output_queue,
-        parser=mock_parser
+        parser=mock_parser,
     )
 
     # Patch process_notification to our side effect version
-    processor.process_notification = AsyncMock(side_effect=side_effect_process_notification)
+    processor.process_notification = AsyncMock(
+        side_effect=side_effect_process_notification
+    )
 
     processed_count = await processor.process_batch(batch_size=5)
 
@@ -102,11 +178,27 @@ async def test_process_batch_success_and_failure(mock_parser, mock_notification_
 
 
 @pytest.mark.asyncio
-async def test_run_processes_when_queue_not_empty(mock_parser, mock_notification_queue, mock_output_queue):
+async def test_run_processes_when_queue_not_empty(
+    mock_parser, mock_notification_queue, mock_output_queue
+):
+    """Test the run loop executes processing when queue is not empty.
+
+    Verifies that the processor:
+    - Polls queue size.
+    - Processes notifications.
+    - Sleeps between polls.
+    - Shuts down gracefully.
+
+    Args:
+        mock_parser (MagicMock): Mocked parser.
+        mock_notification_queue (MagicMock): Mocked notification queue.
+        mock_output_queue (MagicMock): Mocked output queue.
+    """
+
     processor = YouTubeNotificationProcessor(
         notification_queue=mock_notification_queue,
         output_queue=mock_output_queue,
-        parser=mock_parser
+        parser=mock_parser,
     )
 
     mock_notification_queue.queue_size.side_effect = [1, 0]
@@ -118,6 +210,7 @@ async def test_run_processes_when_queue_not_empty(mock_parser, mock_notification
         async def shutdown_soon():
             await asyncio.sleep(0)  # yield control
             processor.shutdown()
+
         asyncio.create_task(shutdown_soon())
 
         await processor.run(poll_interval=0.01)
@@ -127,18 +220,43 @@ async def test_run_processes_when_queue_not_empty(mock_parser, mock_notification
 
 
 @pytest.mark.asyncio
-async def test_shutdown_sets_event(mock_parser, mock_notification_queue, mock_output_queue):
+async def test_shutdown_sets_event(
+    mock_parser, mock_notification_queue, mock_output_queue
+):
+    """Test shutdown correctly sets the internal shutdown event.
+
+    Args:
+        mock_parser (MagicMock): Mocked parser.
+        mock_notification_queue (MagicMock): Mocked notification queue.
+        mock_output_queue (MagicMock): Mocked output queue.
+    """
+
     processor = YouTubeNotificationProcessor(
         notification_queue=mock_notification_queue,
         output_queue=mock_output_queue,
-        parser=mock_parser
+        parser=mock_parser,
     )
     assert not processor._shutdown_event.is_set()
     processor.shutdown()
     assert processor._shutdown_event.is_set()
 
+
 @pytest.mark.asyncio
-async def test_process_notification_with_realistic_xml(mock_notification_queue, mock_output_queue):
+async def test_process_notification_with_realistic_xml(
+    mock_notification_queue, mock_output_queue
+):
+    """Test parsing a realistic YouTube XML notification using the real parser.
+
+    Verifies that:
+    - All expected fields are parsed correctly.
+    - The result contains correct values (video_id, channel_id, title, author, timestamps).
+    - The output queue receives the processed notification.
+
+    Args:
+        mock_notification_queue (MagicMock): Mocked input queue.
+        mock_output_queue (MagicMock): Mocked output queue.
+    """
+
     xml_data = """<?xml version="1.0" encoding="UTF-8"?>
     <feed xmlns="http://www.w3.org/2005/Atom"
           xmlns:yt="http://www.youtube.com/xml/schemas/2015">
@@ -162,14 +280,14 @@ async def test_process_notification_with_realistic_xml(mock_notification_queue, 
     processor = YouTubeNotificationProcessor(
         notification_queue=mock_notification_queue,
         output_queue=mock_output_queue,
-        parser=parser
+        parser=parser,
     )
 
     result = await processor.process_notification(xml_data)
 
     # Assert the parsed result is a YouTubeNotification object with expected fields
     assert result is not None
-    assert hasattr(result, 'video_id')
+    assert hasattr(result, "video_id")
     assert result.video_id == "abc123XYZ"
     assert result.channel_id == "channel789"
     assert result.title == "Test Video Title"
