@@ -1,8 +1,6 @@
 import asyncio
 
 import valkey
-
-from ytindexer.config import settings
 from ytindexer.logging import logger
 
 from .base import AsyncDatabaseConnection
@@ -46,9 +44,13 @@ class ValkeyConnection(AsyncDatabaseConnection[valkey.client.Valkey]):
                         db=0,
                     )
                     self._client.ping()
-                    logger.info("Successfully connected to Valkey at: {host}", host=self.host)
+                    logger.info(
+                        "Successfully connected to Valkey at: {host}", host=self.host
+                    )
                 except valkey.exceptions.ConnectionError as conn_fail:
-                    logger.error("Couldn't connect to the Valkey: {error}", error=conn_fail)
+                    logger.error(
+                        "Couldn't connect to the Valkey: {error}", error=conn_fail
+                    )
                     raise
             return self._client
 

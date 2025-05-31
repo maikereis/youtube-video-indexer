@@ -1,9 +1,7 @@
 import asyncio
 
-from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
+from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo.errors import ConnectionFailure
-
-from ytindexer.config import settings
 from ytindexer.logging import logger
 
 from .base import AsyncDatabaseConnection
@@ -37,10 +35,15 @@ class MongoConnection(AsyncDatabaseConnection[AsyncIOMotorClient]):
                 try:
                     self._client = AsyncIOMotorClient(self.dsn)
                     # Optionally test connection by pinging
-                    await self._client.admin.command('ping')
-                    logger.info("Successfully connected to MongoDB at: {host}", host=self.dsn)
+                    await self._client.admin.command("ping")
+                    logger.info(
+                        "Successfully connected to MongoDB at: {host}", host=self.dsn
+                    )
                 except ConnectionFailure as conn_fail:
-                    logger.error("Couldn't connect to the MongoDB database: {error}", error=conn_fail)
+                    logger.error(
+                        "Couldn't connect to the MongoDB database: {error}",
+                        error=conn_fail,
+                    )
                     raise
             return self._client
 

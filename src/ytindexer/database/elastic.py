@@ -1,8 +1,6 @@
 import asyncio
 
 from elasticsearch import AsyncElasticsearch, ConnectionError
-
-from ytindexer.config import settings
 from ytindexer.logging import logger
 
 from .base import AsyncDatabaseConnection
@@ -27,7 +25,7 @@ class ElasticConnection(AsyncDatabaseConnection[AsyncElasticsearch]):
 
         Returns:
             AsyncElasticsearch: The ElasticSearch async client.
-        
+
         Raises:
             ConnectionError: If connection to ElasticSearch fails.
         """
@@ -36,9 +34,13 @@ class ElasticConnection(AsyncDatabaseConnection[AsyncElasticsearch]):
                 try:
                     self._client = AsyncElasticsearch(self.dsn)
                     await self._client.info()
-                    logger.info("Successfully connected to Elastic at: {host}", host=self.dsn)
+                    logger.info(
+                        "Successfully connected to Elastic at: {host}", host=self.dsn
+                    )
                 except ConnectionError as conn_fail:
-                    logger.error("Couldn't connect to Elastic: {error}", error=conn_fail)
+                    logger.error(
+                        "Couldn't connect to Elastic: {error}", error=conn_fail
+                    )
                     raise
             return self._client
 

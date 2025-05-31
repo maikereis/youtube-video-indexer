@@ -1,3 +1,15 @@
+"""
+FastAPI application setup for the YouTube Indexer API.
+
+This module configures the FastAPI app with:
+- API metadata (title, description, version, docs URLs)
+- Route inclusion for health checks, webhooks, videos, and channels
+- Middleware setup for trusted hosts, CORS, and rate limiting
+- Logging configuration for the API server
+
+The app enables transcript indexation and search for YouTube videos.
+"""
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
