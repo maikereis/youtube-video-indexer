@@ -1,10 +1,8 @@
 from fastapi import APIRouter, Depends, Request, Response
 
 from ytindexer.api.dependencies import get_limiter, get_notification_queue
-from ytindexer.logging import configure_logging, logger
+from ytindexer.logging import logger
 from ytindexer.queues import NotificationQueue
-
-configure_logging(log_level="INFO", log_file="logs/webhooks.log")
 
 router = APIRouter()
 limiter = get_limiter()

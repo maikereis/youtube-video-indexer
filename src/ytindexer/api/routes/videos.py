@@ -5,9 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from ytindexer.api.dependencies import get_elastic_connection, get_limiter
 from ytindexer.api.models.response import SearchResults, VideoMetadata
 from ytindexer.config import settings
-from ytindexer.logging import configure_logging, logger
-
-configure_logging(log_level="INFO", log_file="logs/videos.log")
+from ytindexer.logging import logger
 
 router = APIRouter()
 limiter = get_limiter()

@@ -6,9 +6,7 @@ from ytindexer.api.dependencies import get_limiter, get_mongo_connection
 from ytindexer.api.models.response import ChannelMetadata, ChannelResults
 from ytindexer.config import settings
 from ytindexer.indexer.config import MongoDBConfig
-from ytindexer.logging import configure_logging, logger
-
-configure_logging(log_level="INFO", log_file="logs/channels.log")
+from ytindexer.logging import logger
 
 router = APIRouter()
 limiter = get_limiter()
