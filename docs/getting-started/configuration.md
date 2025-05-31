@@ -1,0 +1,35 @@
+## Configuration
+
+### Environment Variables
+
+Create a `.env` file with the following configuration, you can use the .env.template as base:
+
+```bash
+GOOGLE_API_KEY=<YOUR API KEY>
+GOOGLE_API_URL="https://www.googleapis.com/youtube/v3/search"
+
+NGROK_URL=<YOU NGROK URL>
+
+QUEUE_HOST="localhost"
+QUEUE_PORT=6379
+QUEUE_PASSWORD=<YOUR PASSWORD>
+
+MONGO_INITDB_ROOT_USERNAME=<YOUR USERNAME>
+MONGO_INITDB_ROOT_PASSWORD=<YOUR PASSWORD>
+
+MONGO_NAME="mongo"
+MONGO_HOST="localhost"
+MONGO_PORT=27017
+MONGO_USERNAME=<YOUR USERNAME>
+MONGO_PASSWORD=<YOUR PASSWORD>
+MONGO_AUTH=<AUTH DB NAME>
+
+ELASTIC_INDEX_NAME="videos"
+ELASTIC_HOST="localhost"
+ELASTIC_PORT=9200
+ELASTIC_USERNAME=<YOUR USERNAME>
+ELASTIC_PASSWORD=<YOUR PASSWORD>
+ELASTIC_SCHEME=<HTTP or HTTPS>
+
+TRANSCRIPT_LANGUAGES=["en", "fr", ...]
+```
