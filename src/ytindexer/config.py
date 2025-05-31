@@ -14,7 +14,7 @@ Example:
         settings = Settings.load_settings()
 """
 
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -128,6 +128,18 @@ class ElasticSettings(BaseSettings):
         return f"{self.scheme}://{self.username}:{self.password.get_secret_value()}@{self.host}:{self.port}"
 
 
+class TranscriptSettings(BaseSettings):
+    """
+    Transcript settings.
+
+    Attributes:
+        languages (Optional[List[str]]): Transcript languages.
+    """
+
+    model_config = SettingsConfigDict(env=".env", env_prefix="TRANSCRIPT_")
+    languages: Optional[List[str]] = Field(None, json_schema_extra={"env": "LANGUAGES"})
+
+
 class Settings:
     """
     Aggregated application settings.
@@ -147,6 +159,7 @@ class Settings:
         self.ngrok = NGrokSettings()
         self.mongo = MongoSettings()
         self.search = ElasticSettings()
+        self.transcript = TranscriptSettings()
 
     @classmethod
     def load_settings(cls) -> "Settings":

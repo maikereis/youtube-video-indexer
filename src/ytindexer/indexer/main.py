@@ -1,12 +1,17 @@
 import asyncio
 
 from ytindexer.config import settings
-from ytindexer.database import (ElasticConnection, MongoConnection,
-                                ValkeyConnection)
-from ytindexer.indexer import (ChannelStatsService, ElasticsearchConfig,
-                               MongoDBConfig, RetryConfig,
-                               SearchIndexingService, VideoIndexingProcessor,
-                               VideoStorageService)
+from ytindexer.database import ElasticConnection, MongoConnection, ValkeyConnection
+from ytindexer.indexer import (
+    ChannelStatsService,
+    ElasticsearchConfig,
+    MongoDBConfig,
+    RetryConfig,
+    SearchIndexingService,
+    VideoIndexingProcessor,
+    VideoStorageService,
+    VideoTranscriptService,
+)
 from ytindexer.logging import logger
 from ytindexer.queues import NotificationQueue
 
@@ -14,7 +19,9 @@ from ytindexer.queues import NotificationQueue
 # Example configuration and setup
 async def main():
     # Configuration
-    es_config = ElasticsearchConfig(index_name=settings.search.index_name, shards=2, replicas=1)
+    es_config = ElasticsearchConfig(
+        index_name=settings.search.index_name, shards=2, replicas=1
+    )
 
     mongo_config = MongoDBConfig(
         database_name=settings.mongo.name,
@@ -25,10 +32,10 @@ async def main():
     retry_config = RetryConfig(max_attempts=3, base_delay=1.0, max_delay=30.0)
 
     valkey_client = ValkeyConnection(
-            host=settings.valkey.host,
-            port=settings.valkey.port,
-            password=settings.valkey.password.get_secret_value(),
-        )
+        host=settings.valkey.host,
+        port=settings.valkey.port,
+        password=settings.valkey.password.get_secret_value(),
+    )
     es_client = ElasticConnection(settings.search.dsn)
     mongo_client = MongoConnection(settings.mongo.dsn)
 
@@ -41,6 +48,7 @@ async def main():
     storage_service = VideoStorageService(mongo_conn, mongo_config, retry_config)
     search_service = SearchIndexingService(es_conn, es_config, retry_config)
     stats_service = ChannelStatsService(mongo_conn, mongo_config, retry_config)
+    transcript_service = VideoTranscriptService(languages=settings.transcript.languages)
 
     # Initialize processor
     processor = VideoIndexingProcessor(
@@ -48,6 +56,7 @@ async def main():
         video_storage=storage_service,
         search_indexing=search_service,
         channel_stats=stats_service,
+        transcript_service=transcript_service,
     )
 
     # Ensure all indices are created

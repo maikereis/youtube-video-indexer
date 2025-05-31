@@ -10,6 +10,7 @@ from .indexing import SearchIndexingService
 from .results import OperationResult, OperationStatus, ProcessingResult
 from .stats import ChannelStatsService
 from .storage import VideoStorageService
+from .transcript import VideoTranscriptService
 
 
 class VideoIndexingProcessor(HealthCheckable):
@@ -21,6 +22,7 @@ class VideoIndexingProcessor(HealthCheckable):
         video_storage: VideoStorageService,
         search_indexing: SearchIndexingService,
         channel_stats: ChannelStatsService,
+        transcript_service: VideoTranscriptService,
         max_concurrent_tasks: int = 10,
         poll_interval: float = 1.0,
     ):
@@ -28,6 +30,7 @@ class VideoIndexingProcessor(HealthCheckable):
         self.video_storage = video_storage
         self.search_indexing = search_indexing
         self.channel_stats = channel_stats
+        self.transcript_service = transcript_service
         self.max_concurrent_tasks = max_concurrent_tasks
         self.poll_interval = poll_interval
         self._running = False
@@ -67,9 +70,43 @@ class VideoIndexingProcessor(HealthCheckable):
                 },
             )
 
+    async def _enrich_video_with_transcript(
+        self, video_data: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """Enrich video data with transcript information"""
+        video_id = video_data.get("video_id")
+        if not video_id:
+            logger.warning(
+                "Video data missing video_id, skipping transcript enrichment"
+            )
+            return video_data
+
+        try:
+            # Get transcript in a thread pool to avoid blocking
+            loop = asyncio.get_event_loop()
+            transcript = await loop.run_in_executor(
+                None, self.transcript_service.get_transcript, video_id
+            )
+
+            if transcript:
+                video_data["transcript"] = transcript
+                logger.debug(f"Added transcript to video {video_id}")
+            else:
+                logger.debug(f"No transcript available for video {video_id}")
+                video_data["transcript"] = None
+
+        except Exception as e:
+            logger.warning(f"Failed to get transcript for video {video_id}: {e}")
+            video_data["transcript"] = None
+
+        return video_data
+
     async def process_video(self, video_data: Dict[str, Any]) -> ProcessingResult:
         """Process a single video through all indexing services"""
         video_id = video_data.get("video_id", "unknown")
+
+        # Enrich with transcript data (non-critical operation)
+        enriched_video_data = await self._enrich_video_with_transcript(video_data)
 
         # Store in MongoDB (critical operation)
         storage_result = await self.video_storage.store_video(video_data)
@@ -88,7 +125,10 @@ class VideoIndexingProcessor(HealthCheckable):
         )
 
         if result.is_success:
-            logger.debug(f"Successfully processed video: {video_id}")
+            has_transcript = enriched_video_data.get("transcript") is not None
+            logger.debug(
+                f"Successfully processed video: {video_id} (transcript: {has_transcript})"
+            )
         elif result.overall_status == OperationStatus.PARTIAL_SUCCESS:
             logger.warning(
                 f"Partially processed video {video_id}: storage succeeded but other operations failed"
@@ -122,7 +162,7 @@ class VideoIndexingProcessor(HealthCheckable):
                     if len(self._active_tasks) >= self.max_concurrent_tasks:
                         # Wait for some tasks to complete
                         if self._active_tasks:
-                            done, self._active_tasks = await asyncio.wait(
+                            _, self._active_tasks = await asyncio.wait(
                                 self._active_tasks,
                                 return_when=asyncio.FIRST_COMPLETED,
                                 timeout=self.poll_interval,

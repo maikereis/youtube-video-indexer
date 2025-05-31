@@ -3,6 +3,7 @@ from .indexing import SearchIndexingService
 from .processor import VideoIndexingProcessor
 from .stats import ChannelStatsService
 from .storage import VideoStorageService
+from .transcript import VideoTranscriptService
 
 __all__ = [
     "ElasticsearchConfig",
@@ -12,4 +13,5 @@ __all__ = [
     "VideoIndexingProcessor",
     "ChannelStatsService",
     "VideoStorageService",
+    "VideoTranscriptService",
 ]
