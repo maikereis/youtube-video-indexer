@@ -1,6 +1,6 @@
 # YouTube PubSubHubbub Indexer Architecture
 
-This document outlines the architecture for the YouTube PubSubHubbub indexer system, which processes YouTube content notifications, indexes them, and makes them searchable through an API.
+This document outlines the architecture for the YouTube PubSubHubbub indexer system, which processes YouTube content notifications, indexes them, and makes them searchable through an API. See [documentation](https://maikereis.github.io/youtube-video-indexer/)
 
 ## System Overview
 
