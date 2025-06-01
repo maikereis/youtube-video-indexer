@@ -6,8 +6,8 @@ from ytindexer.logging import logger
 from .base import Queue
 
 
-class NotificationQueue(Queue):
-    """Queue implementation using Valkey/Redis for notification tasks.
+class MessageQueue(Queue):
+    """Queue implementation using Valkey/Redis for message tasks.
 
     This queue stores serialized JSON-compatible tasks in a Redis list.
     Tasks can be enqueued, dequeued singly or in batches.
@@ -19,7 +19,7 @@ class NotificationQueue(Queue):
 
     def __init__(self, client: Any, queue_name: str = "queue"):
         """
-        Initialize a NotificationQueue instance.
+        Initialize a MessageQueue instance.
 
         Args:
             client (Any): Redis/Valkey client instance.
@@ -27,7 +27,7 @@ class NotificationQueue(Queue):
         """
         self.client = client
         self.queue_name = queue_name
-        logger.info(f"Initialized NotificationQueue with name: {queue_name}")
+        logger.info(f"Initialized MessageQueue with name: {queue_name}")
 
     def enqueue(self, task_data: Any) -> None:
         """

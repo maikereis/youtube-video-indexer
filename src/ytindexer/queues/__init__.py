@@ -1,4 +1,4 @@
 from .base import Queue
-from .notification import NotificationQueue
+from .message import MessageQueue
 
-__all__ = ["Queue","NotificationQueue"]
+__all__ = ["Queue", "MessageQueue"]

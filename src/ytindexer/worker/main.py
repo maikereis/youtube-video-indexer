@@ -2,13 +2,11 @@ import asyncio
 
 from ytindexer.config import settings
 from ytindexer.database import ValkeyConnection
-from ytindexer.queues import NotificationQueue
-from ytindexer.worker import (YouTubeNotificationParser,
-                              YouTubeNotificationProcessor)
+from ytindexer.queues import MessageQueue
+from ytindexer.worker import YouTubeNotificationParser, YouTubeNotificationProcessor
 
 
 async def main():
-
     valkey_client = ValkeyConnection(
         host=settings.valkey.host,
         port=settings.valkey.port,
@@ -17,8 +15,8 @@ async def main():
 
     valkey_conn = await valkey_client.connect()
 
-    notification_queue = NotificationQueue(valkey_conn, "notification-queue")
-    output_queue = NotificationQueue(valkey_conn, "output-queue")
+    notification_queue = MessageQueue(valkey_conn, "notification-queue")
+    output_queue = MessageQueue(valkey_conn, "output-queue")
     parser = YouTubeNotificationParser()
 
     processor = YouTubeNotificationProcessor(notification_queue, output_queue, parser)

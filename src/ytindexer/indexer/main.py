@@ -13,7 +13,7 @@ from ytindexer.indexer import (
     VideoTranscriptService,
 )
 from ytindexer.logging import logger
-from ytindexer.queues import NotificationQueue
+from ytindexer.queues import MessageQueue
 
 
 # Example configuration and setup
@@ -44,7 +44,7 @@ async def main():
     mongo_conn = await mongo_client.connect()
 
     # Initialize services with configuration
-    output_queue = NotificationQueue(valkey_conn, "output-queue")
+    output_queue = MessageQueue(valkey_conn, "output-queue")
     storage_service = VideoStorageService(mongo_conn, mongo_config, retry_config)
     search_service = SearchIndexingService(es_conn, es_config, retry_config)
     stats_service = ChannelStatsService(mongo_conn, mongo_config, retry_config)

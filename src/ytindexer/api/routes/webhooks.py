@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Request, Response
 
 from ytindexer.api.dependencies import get_limiter, get_notification_queue
 from ytindexer.logging import logger
-from ytindexer.queues import NotificationQueue
+from ytindexer.queues import MessageQueue
 
 router = APIRouter()
 limiter = get_limiter()
@@ -26,7 +26,7 @@ async def verify_subscription(request: Request):
 @limiter.limit("30/minute")  # Example: limit to 5 requests per minute
 async def handle_notification(
     request: Request,
-    notification_queue: NotificationQueue = Depends(get_notification_queue),
+    notification_queue: MessageQueue = Depends(get_notification_queue),
 ):
     """Handle YouTube PubSubHubbub content notification"""
     try:

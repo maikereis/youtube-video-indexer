@@ -12,7 +12,7 @@ from slowapi.util import get_remote_address
 
 from ytindexer.config import settings
 from ytindexer.database import ElasticConnection, MongoConnection, ValkeyConnection
-from ytindexer.queues import NotificationQueue
+from ytindexer.queues import MessageQueue
 
 
 def get_limiter() -> Limiter:
@@ -29,21 +29,21 @@ def get_limiter() -> Limiter:
     )
 
 
-async def get_notification_queue() -> NotificationQueue:
+async def get_notification_queue() -> MessageQueue:
     """Create and return a NotificationQueue instance.
 
     Connects to the Valkey (Redis) server configured in the settings,
     and creates a notification queue named 'notification-queue'.
 
     Returns:
-        NotificationQueue: An instance for managing notification messages.
+        MessageQueue: An instance for managing notification messages.
     """
     client = await ValkeyConnection(
         host=settings.valkey.host,
         port=settings.valkey.port,
         password=settings.valkey.password.get_secret_value(),
     ).connect()
-    return NotificationQueue(client, "notification-queue")
+    return MessageQueue(client, "notification-queue")
 
 
 async def get_elastic_connection() -> ElasticConnection:
