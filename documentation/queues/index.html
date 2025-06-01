@@ -793,17 +793,17 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ytindexer.queues.NotificationQueue" class="md-nav__link">
+  <a href="#ytindexer.queues.MessageQueue" class="md-nav__link">
     <span class="md-ellipsis">
-      NotificationQueue
+      MessageQueue
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="NotificationQueue">
+    <nav class="md-nav" aria-label="MessageQueue">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#ytindexer.queues.NotificationQueue.__init__" class="md-nav__link">
+  <a href="#ytindexer.queues.MessageQueue.__init__" class="md-nav__link">
     <span class="md-ellipsis">
       __init__
     </span>
@@ -812,7 +812,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ytindexer.queues.NotificationQueue.batch_dequeue" class="md-nav__link">
+  <a href="#ytindexer.queues.MessageQueue.batch_dequeue" class="md-nav__link">
     <span class="md-ellipsis">
       batch_dequeue
     </span>
@@ -821,7 +821,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ytindexer.queues.NotificationQueue.dequeue" class="md-nav__link">
+  <a href="#ytindexer.queues.MessageQueue.dequeue" class="md-nav__link">
     <span class="md-ellipsis">
       dequeue
     </span>
@@ -830,7 +830,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ytindexer.queues.NotificationQueue.enqueue" class="md-nav__link">
+  <a href="#ytindexer.queues.MessageQueue.enqueue" class="md-nav__link">
     <span class="md-ellipsis">
       enqueue
     </span>
@@ -839,7 +839,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ytindexer.queues.NotificationQueue.queue_size" class="md-nav__link">
+  <a href="#ytindexer.queues.MessageQueue.queue_size" class="md-nav__link">
     <span class="md-ellipsis">
       queue_size
     </span>
@@ -1022,17 +1022,17 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ytindexer.queues.NotificationQueue" class="md-nav__link">
+  <a href="#ytindexer.queues.MessageQueue" class="md-nav__link">
     <span class="md-ellipsis">
-      NotificationQueue
+      MessageQueue
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="NotificationQueue">
+    <nav class="md-nav" aria-label="MessageQueue">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#ytindexer.queues.NotificationQueue.__init__" class="md-nav__link">
+  <a href="#ytindexer.queues.MessageQueue.__init__" class="md-nav__link">
     <span class="md-ellipsis">
       __init__
     </span>
@@ -1041,7 +1041,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ytindexer.queues.NotificationQueue.batch_dequeue" class="md-nav__link">
+  <a href="#ytindexer.queues.MessageQueue.batch_dequeue" class="md-nav__link">
     <span class="md-ellipsis">
       batch_dequeue
     </span>
@@ -1050,7 +1050,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ytindexer.queues.NotificationQueue.dequeue" class="md-nav__link">
+  <a href="#ytindexer.queues.MessageQueue.dequeue" class="md-nav__link">
     <span class="md-ellipsis">
       dequeue
     </span>
@@ -1059,7 +1059,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ytindexer.queues.NotificationQueue.enqueue" class="md-nav__link">
+  <a href="#ytindexer.queues.MessageQueue.enqueue" class="md-nav__link">
     <span class="md-ellipsis">
       enqueue
     </span>
@@ -1068,7 +1068,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ytindexer.queues.NotificationQueue.queue_size" class="md-nav__link">
+  <a href="#ytindexer.queues.MessageQueue.queue_size" class="md-nav__link">
     <span class="md-ellipsis">
       queue_size
     </span>
@@ -1181,11 +1181,11 @@
 
 
 
-<h2 id="ytindexer.queues.NotificationQueue" class="doc doc-heading">
-            <code>NotificationQueue</code>
+<h2 id="ytindexer.queues.MessageQueue" class="doc doc-heading">
+            <code>MessageQueue</code>
 
 
-<a href="#ytindexer.queues.NotificationQueue" class="headerlink" title="Permanent link">&para;</a></h2>
+<a href="#ytindexer.queues.MessageQueue" class="headerlink" title="Permanent link">&para;</a></h2>
 
 
     <div class="doc doc-contents ">
@@ -1193,7 +1193,7 @@
               Bases: <code><a class="autorefs autorefs-internal" title="Queue (ytindexer.queues.base.Queue)" href="#ytindexer.queues.Queue">Queue</a></code></p>
 
 
-        <p>Queue implementation using Valkey/Redis for notification tasks.</p>
+        <p>Queue implementation using Valkey/Redis for message tasks.</p>
 <p>This queue stores serialized JSON-compatible tasks in a Redis list.
 Tasks can be enqueued, dequeued singly or in batches.</p>
 
@@ -1209,7 +1209,7 @@ Tasks can be enqueued, dequeued singly or in batches.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code><span title="ytindexer.queues.NotificationQueue.client">client</span></code></td>
+            <td><code><span title="ytindexer.queues.MessageQueue.client">client</span></code></td>
             <td>
                   <code><span title="typing.Any">Any</span></code>
             </td>
@@ -1220,7 +1220,7 @@ Tasks can be enqueued, dequeued singly or in batches.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code><span title="ytindexer.queues.NotificationQueue.queue_name">queue_name</span></code></td>
+            <td><code><span title="ytindexer.queues.MessageQueue.queue_name">queue_name</span></code></td>
             <td>
                   <code><span title="str">str</span></code>
             </td>
@@ -1240,7 +1240,7 @@ Tasks can be enqueued, dequeued singly or in batches.</p>
 
 
               <details class="quote">
-                <summary>Source code in <code>src/ytindexer/queues/notification.py</code></summary>
+                <summary>Source code in <code>.venv/lib/python3.12/site-packages/ytindexer/queues/message.py</code></summary>
                 <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-9">  9</a></span>
 <span class="normal"><a href="#__codelineno-0-10"> 10</a></span>
 <span class="normal"><a href="#__codelineno-0-11"> 11</a></span>
@@ -1336,8 +1336,8 @@ Tasks can be enqueued, dequeued singly or in batches.</p>
 <span class="normal"><a href="#__codelineno-0-101">101</a></span>
 <span class="normal"><a href="#__codelineno-0-102">102</a></span>
 <span class="normal"><a href="#__codelineno-0-103">103</a></span>
-<span class="normal"><a href="#__codelineno-0-104">104</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9"></a><span class="k">class</span><span class="w"> </span><span class="nc">NotificationQueue</span><span class="p">(</span><span class="n">Queue</span><span class="p">):</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Queue implementation using Valkey/Redis for notification tasks.</span>
+<span class="normal"><a href="#__codelineno-0-104">104</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9"></a><span class="k">class</span><span class="w"> </span><span class="nc">MessageQueue</span><span class="p">(</span><span class="n">Queue</span><span class="p">):</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Queue implementation using Valkey/Redis for message tasks.</span>
 </span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11"></a>
 </span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12"></a><span class="sd">    This queue stores serialized JSON-compatible tasks in a Redis list.</span>
 </span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13"></a><span class="sd">    Tasks can be enqueued, dequeued singly or in batches.</span>
@@ -1349,7 +1349,7 @@ Tasks can be enqueued, dequeued singly or in batches.</p>
 </span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19"></a>
 </span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">queue_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;queue&quot;</span><span class="p">):</span>
 </span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="sd">        Initialize a NotificationQueue instance.</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="sd">        Initialize a MessageQueue instance.</span>
 </span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23"></a>
 </span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24"></a><span class="sd">        Args:</span>
 </span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25"></a><span class="sd">            client (Any): Redis/Valkey client instance.</span>
@@ -1357,7 +1357,7 @@ Tasks can be enqueued, dequeued singly or in batches.</p>
 </span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="sd">        &quot;&quot;&quot;</span>
 </span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">client</span>
 </span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">queue_name</span> <span class="o">=</span> <span class="n">queue_name</span>
-</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Initialized NotificationQueue with name: </span><span class="si">{</span><span class="n">queue_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Initialized MessageQueue with name: </span><span class="si">{</span><span class="n">queue_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31"></a>
 </span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">enqueue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_data</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1450,15 +1450,15 @@ Tasks can be enqueued, dequeued singly or in batches.</p>
 <div class="doc doc-object doc-function">
 
 
-<h3 id="ytindexer.queues.NotificationQueue.__init__" class="doc doc-heading">
+<h3 id="ytindexer.queues.MessageQueue.__init__" class="doc doc-heading">
             <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">queue_name</span><span class="o">=</span><span class="s1">&#39;queue&#39;</span><span class="p">)</span></code>
 
-<a href="#ytindexer.queues.NotificationQueue.__init__" class="headerlink" title="Permanent link">&para;</a></h3>
+<a href="#ytindexer.queues.MessageQueue.__init__" class="headerlink" title="Permanent link">&para;</a></h3>
 
 
     <div class="doc doc-contents ">
 
-        <p>Initialize a NotificationQueue instance.</p>
+        <p>Initialize a MessageQueue instance.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -1509,7 +1509,7 @@ Tasks can be enqueued, dequeued singly or in batches.</p>
 
 
             <details class="quote">
-              <summary>Source code in <code>src/ytindexer/queues/notification.py</code></summary>
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/ytindexer/queues/message.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-20">20</a></span>
 <span class="normal"><a href="#__codelineno-0-21">21</a></span>
 <span class="normal"><a href="#__codelineno-0-22">22</a></span>
@@ -1522,7 +1522,7 @@ Tasks can be enqueued, dequeued singly or in batches.</p>
 <span class="normal"><a href="#__codelineno-0-29">29</a></span>
 <span class="normal"><a href="#__codelineno-0-30">30</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">queue_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;queue&quot;</span><span class="p">):</span>
 </span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="sd">    Initialize a NotificationQueue instance.</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="sd">    Initialize a MessageQueue instance.</span>
 </span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23"></a>
 </span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24"></a><span class="sd">    Args:</span>
 </span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25"></a><span class="sd">        client (Any): Redis/Valkey client instance.</span>
@@ -1530,7 +1530,7 @@ Tasks can be enqueued, dequeued singly or in batches.</p>
 </span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="sd">    &quot;&quot;&quot;</span>
 </span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">client</span>
 </span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">queue_name</span> <span class="o">=</span> <span class="n">queue_name</span>
-</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Initialized NotificationQueue with name: </span><span class="si">{</span><span class="n">queue_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Initialized MessageQueue with name: </span><span class="si">{</span><span class="n">queue_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -1540,10 +1540,10 @@ Tasks can be enqueued, dequeued singly or in batches.</p>
 <div class="doc doc-object doc-function">
 
 
-<h3 id="ytindexer.queues.NotificationQueue.batch_dequeue" class="doc doc-heading">
+<h3 id="ytindexer.queues.MessageQueue.batch_dequeue" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">batch_dequeue</span><span class="p">(</span><span class="n">batch_size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span></code>
 
-<a href="#ytindexer.queues.NotificationQueue.batch_dequeue" class="headerlink" title="Permanent link">&para;</a></h3>
+<a href="#ytindexer.queues.MessageQueue.batch_dequeue" class="headerlink" title="Permanent link">&para;</a></h3>
 
 
     <div class="doc doc-contents ">
@@ -1607,7 +1607,7 @@ Tasks can be enqueued, dequeued singly or in batches.</p>
 
 
             <details class="quote">
-              <summary>Source code in <code>src/ytindexer/queues/notification.py</code></summary>
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/ytindexer/queues/message.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-68">68</a></span>
 <span class="normal"><a href="#__codelineno-0-69">69</a></span>
 <span class="normal"><a href="#__codelineno-0-70">70</a></span>
@@ -1672,10 +1672,10 @@ Tasks can be enqueued, dequeued singly or in batches.</p>
 <div class="doc doc-object doc-function">
 
 
-<h3 id="ytindexer.queues.NotificationQueue.dequeue" class="doc doc-heading">
+<h3 id="ytindexer.queues.MessageQueue.dequeue" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">dequeue</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span></code>
 
-<a href="#ytindexer.queues.NotificationQueue.dequeue" class="headerlink" title="Permanent link">&para;</a></h3>
+<a href="#ytindexer.queues.MessageQueue.dequeue" class="headerlink" title="Permanent link">&para;</a></h3>
 
 
     <div class="doc doc-contents ">
@@ -1739,7 +1739,7 @@ Tasks can be enqueued, dequeued singly or in batches.</p>
 
 
             <details class="quote">
-              <summary>Source code in <code>src/ytindexer/queues/notification.py</code></summary>
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/ytindexer/queues/message.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-46">46</a></span>
 <span class="normal"><a href="#__codelineno-0-47">47</a></span>
 <span class="normal"><a href="#__codelineno-0-48">48</a></span>
@@ -1790,10 +1790,10 @@ Tasks can be enqueued, dequeued singly or in batches.</p>
 <div class="doc doc-object doc-function">
 
 
-<h3 id="ytindexer.queues.NotificationQueue.enqueue" class="doc doc-heading">
+<h3 id="ytindexer.queues.MessageQueue.enqueue" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">enqueue</span><span class="p">(</span><span class="n">task_data</span><span class="p">)</span></code>
 
-<a href="#ytindexer.queues.NotificationQueue.enqueue" class="headerlink" title="Permanent link">&para;</a></h3>
+<a href="#ytindexer.queues.MessageQueue.enqueue" class="headerlink" title="Permanent link">&para;</a></h3>
 
 
     <div class="doc doc-contents ">
@@ -1834,7 +1834,7 @@ Tasks can be enqueued, dequeued singly or in batches.</p>
 
 
             <details class="quote">
-              <summary>Source code in <code>src/ytindexer/queues/notification.py</code></summary>
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/ytindexer/queues/message.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-32">32</a></span>
 <span class="normal"><a href="#__codelineno-0-33">33</a></span>
 <span class="normal"><a href="#__codelineno-0-34">34</a></span>
@@ -1869,10 +1869,10 @@ Tasks can be enqueued, dequeued singly or in batches.</p>
 <div class="doc doc-object doc-function">
 
 
-<h3 id="ytindexer.queues.NotificationQueue.queue_size" class="doc doc-heading">
+<h3 id="ytindexer.queues.MessageQueue.queue_size" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">queue_size</span><span class="p">()</span></code>
 
-<a href="#ytindexer.queues.NotificationQueue.queue_size" class="headerlink" title="Permanent link">&para;</a></h3>
+<a href="#ytindexer.queues.MessageQueue.queue_size" class="headerlink" title="Permanent link">&para;</a></h3>
 
 
     <div class="doc doc-contents ">
@@ -1904,7 +1904,7 @@ Tasks can be enqueued, dequeued singly or in batches.</p>
 
 
             <details class="quote">
-              <summary>Source code in <code>src/ytindexer/queues/notification.py</code></summary>
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/ytindexer/queues/message.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-97"> 97</a></span>
 <span class="normal"><a href="#__codelineno-0-98"> 98</a></span>
 <span class="normal"><a href="#__codelineno-0-99"> 99</a></span>
@@ -1962,7 +1962,7 @@ the underlying queue mechanism.</p>
 
 
               <details class="quote">
-                <summary>Source code in <code>src/ytindexer/queues/base.py</code></summary>
+                <summary>Source code in <code>.venv/lib/python3.12/site-packages/ytindexer/queues/base.py</code></summary>
                 <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-5"> 5</a></span>
 <span class="normal"><a href="#__codelineno-0-6"> 6</a></span>
 <span class="normal"><a href="#__codelineno-0-7"> 7</a></span>
@@ -2162,7 +2162,7 @@ the underlying queue mechanism.</p>
 
 
             <details class="quote">
-              <summary>Source code in <code>src/ytindexer/queues/base.py</code></summary>
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/ytindexer/queues/base.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-33">33</a></span>
 <span class="normal"><a href="#__codelineno-0-34">34</a></span>
 <span class="normal"><a href="#__codelineno-0-35">35</a></span>
@@ -2236,7 +2236,7 @@ the underlying queue mechanism.</p>
 
 
             <details class="quote">
-              <summary>Source code in <code>src/ytindexer/queues/base.py</code></summary>
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/ytindexer/queues/base.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-23">23</a></span>
 <span class="normal"><a href="#__codelineno-0-24">24</a></span>
 <span class="normal"><a href="#__codelineno-0-25">25</a></span>
@@ -2310,7 +2310,7 @@ the underlying queue mechanism.</p>
 
 
             <details class="quote">
-              <summary>Source code in <code>src/ytindexer/queues/base.py</code></summary>
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/ytindexer/queues/base.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-13">13</a></span>
 <span class="normal"><a href="#__codelineno-0-14">14</a></span>
 <span class="normal"><a href="#__codelineno-0-15">15</a></span>
@@ -2376,7 +2376,7 @@ the underlying queue mechanism.</p>
 
 
             <details class="quote">
-              <summary>Source code in <code>src/ytindexer/queues/base.py</code></summary>
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/ytindexer/queues/base.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-47">47</a></span>
 <span class="normal"><a href="#__codelineno-0-48">48</a></span>
 <span class="normal"><a href="#__codelineno-0-49">49</a></span>
