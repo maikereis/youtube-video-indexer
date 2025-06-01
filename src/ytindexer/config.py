@@ -93,7 +93,7 @@ class MongoSettings(BaseSettings):
         Returns:
             str: The full MongoDB connection string including credentials and auth source.
         """
-        return f"mongodb://{self.username}:{self.password.get_secret_value()}@{self.host}:{self.port}/default_db?authSource={self.auth}"
+        return f"mongodb://{self.username}:{self.password.get_secret_value()}@{self.host}:{self.port}/default_db?authSource={self.auth}"  # pylint: disable=no-member
 
 
 class ElasticSettings(BaseSettings):
@@ -125,7 +125,7 @@ class ElasticSettings(BaseSettings):
         Returns:
             str: The full Elasticsearch connection URL including credentials.
         """
-        return f"{self.scheme}://{self.username}:{self.password.get_secret_value()}@{self.host}:{self.port}"
+        return f"{self.scheme}://{self.username}:{self.password.get_secret_value()}@{self.host}:{self.port}"  # pylint: disable=no-member
 
 
 class TranscriptSettings(BaseSettings):
